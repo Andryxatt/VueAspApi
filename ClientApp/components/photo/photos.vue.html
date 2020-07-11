@@ -1,0 +1,16 @@
+<template>
+    <div>
+        <!--<form method="post" enctype="multipart/form-data">-->
+          
+            <!--<input type="hidden" v-model="productId"/>-->
+            <p>
+                <label for="files">Photos</label>
+                <input type="file" name="files" id="files" ref="file" multiple v-on:change="handleFileUpload($event.target.files)"  />
+            </p>
+
+            <!--<button  class="go-button" @click.prevent="addPhotos">Save</button>
+        </form>-->
+    </div>
+</template>
+
+<script src="./photo.ts"></script>

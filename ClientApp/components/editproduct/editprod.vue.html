@@ -1,0 +1,55 @@
+<template>
+    <div>
+        <form method="post" class="col-lg-12 mb-3">
+
+            <b-form-group>
+                <label for="model">Model product</label>
+                <b-form-input id="model"
+                              v-model="product.model"
+                              type="text"
+                              name="model"></b-form-input>
+            </b-form-group>
+            <b-form-group>
+                <label for="priceBy">Price by</label>
+                <b-form-input id="priceBy"
+                              v-model="product.priceBy"
+                              type="number"
+                              name="priceBy"></b-form-input>
+            </b-form-group>
+            <b-form-group>
+                <label for="">SubCategory </label>
+                <b-form-input id="subId"
+                              v-model="product.subId"
+                              name="subId" autocomplete="off"></b-form-input>
+            </b-form-group>
+            <b-form-group>
+                <label for="brand">Brand name </label>
+                <b-form-select id="brand" class="form-control" v-model="product.brandId" :options="brands" value-field="brandId" text-field="nameBrand">
+                </b-form-select>
+            </b-form-group>
+            <b-form-group>
+                <label for="files">Photos</label>
+                <b-container fluid class="p-4 bg-dark">
+                    <b-row>
+                        <b-col class="col-lg-2" v-for="(url,index) in product.photos" :key="index">
+                            <b-img style="width:150px" thumbnail fluid :src="returnUrl(url.byteImage)" alt="Image 1"></b-img>
+                        
+                            <b-button @click="deletePhoto(url.photoId)" >Delete photo</b-button>
+                        </b-col>
+                    </b-row>
+                </b-container>
+                <input type="file" name="files" id="files" ref="file" multiple v-on:change="handleFileUpload($event.target.files)" />
+            </b-form-group>
+                <b-button type="submit" pill variant="primary" @click.prevent="saveUpdate">Save</b-button>
+        </form>
+        <!--<div class="col-lg-12" v-for="(url,index) in product.photos" :key="index" >
+            <img class="col-md-2" :src="returnUrl(url.byteImage)" />
+          <b-button @click="slicePhoto(index)">Delete photo</b-button>
+        </div>-->
+        
+    </div>
+</template>
+<style scoped>
+
+</style>
+<script src="./editproduct.ts"></script>

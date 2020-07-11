@@ -1,0 +1,27 @@
+<template>
+    <div>
+        <form>
+            <p>
+                <label for="nameBrand">Name brand</label>
+                <input id="nameBrand"
+                       v-model="brand.nameBrand"
+                       type="text"
+                       name="nameBrand">
+            </p>
+            <p>
+                <label for="description">Description</label>
+                <input id="description"
+                       v-model="brand.description"
+                       type="text"
+                       name="description">
+            </p>
+            <button type="submit" class="go-button" @click.prevent="addBrand">Save</button>
+        </form>
+        <p v-for="item in brands">
+            {{item.nameBrand}}
+        </p>
+       
+    </div>
+</template>
+
+<script src="./brand.ts"></script>

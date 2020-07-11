@@ -1,0 +1,67 @@
+<template>
+    <div class="container">
+        <div class="row wrapp-content">
+        <router-link class="btn btn-primary" to="/newproduct">Create new product</router-link>
+        <EditProductComponent v-if="showEditKey" v-bind="product" :product="product" :brands="brands"></EditProductComponent>
+           
+            <h2>List of products</h2>
+       
+            <div class="container">
+                <b-card :title="product.model"
+                        :img-src="returnUrl(product.photos[1].byteImage)"
+                        img-alt="Image"
+                        img-width="100%"
+                        img-height="200px"
+                        img-top
+                        class="col-md-3"
+                        tag="article"
+                        v-for="product in products" :key="product.productId" v-bind="product">
+                    <b-card-text>
+                        Price: {{product.priceBy}} $
+                    </b-card-text>
+
+                 
+                  
+                    <template v-slot:footer>
+                        <b-button pill variant="warning" @click.prevent="deleteProduct(product.productId)">Delete</b-button>
+                        <b-button pill variant="default" @click.prevent="showEdit(product)">Edit</b-button>
+                        <b-button pill variant="default" :to="{ name: 'single', params: { productId: product.productId }}">
+                            Add sizes
+                        </b-button>
+                    </template>
+                </b-card>
+            </div>
+        
+
+     </div>
+</div>
+</template>
+<style scoped>
+   
+    form{
+        border:1px solid #a1a1a1;
+        background-color:#d1f8ff;
+        border-radius:5px;
+        padding:5px;
+        margin-bottom:15px;
+    }
+    .wrapp-content {
+        margin-top: 60px;
+    }
+    .wrapp-content h2 {
+        text-align:center;
+        padding:15px;
+        text-transform:uppercase;
+       
+    }
+    .card-footer{
+        display:flex;
+        justify-content:space-around;
+    }
+    .card {
+        border:1px solid black;
+        border-radius:3px;
+        margin:0 0 10px ;
+    }
+</style>
+<script src="./product.ts"></script>

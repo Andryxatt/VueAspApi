@@ -1,0 +1,23 @@
+<template>
+    <div>
+        sizes
+        <form method="post" enctype="multipart/form-data">
+            <label for="sizeua">Size Ukraine</label>
+            <input type="text" value="0" id="sizeua" v-model="sizeUA" />
+            <label for="sizeusa">Size United States</label>
+            <input type="text" value="0" id="sizeusa" v-model="sizeUSA" />
+
+            <button class="go-button" @click.prevent="addSize">Save</button>
+        </form>
+        <div>
+            <ol>
+                <li v-for="(size,index) in sizes" :key="index">
+                    Size UA = {{size.sizeUA}}
+                    Size USA =  {{size.sizeUSA}}
+                </li>
+            </ol>
+        </div>
+    </div>
+</template>
+
+<script src="./size.ts"></script>
