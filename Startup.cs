@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VueAsp.Data;
+using VueAsp.Services;
 
 namespace VueAsp
 {
@@ -27,6 +28,7 @@ namespace VueAsp
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BazaDataBase>(options => options.UseSqlServer(connection));
             services.AddMvc();
+            services.ConfigureRepositoryWrapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

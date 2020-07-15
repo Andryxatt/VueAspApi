@@ -1,14 +1,12 @@
 <template>
     <div class="container">
         <div class="row wrapp-content">
-        <router-link class="btn btn-primary" to="/newproduct">Create new product</router-link>
-        <EditProductComponent v-if="showEditKey" v-bind="product" :product="product" :brands="brands"></EditProductComponent>
-           
+            <router-link class="btn btn-primary" to="/newproduct">Create new product</router-link>
+            <EditProductComponent v-if="showEditKey" v-bind="product" :product="product" :brands="brands"></EditProductComponent>
             <h2>List of products</h2>
-       
             <div class="container">
-                <b-card :title="product.model"
-                        :img-src="returnUrl(product.photos[1].byteImage)"
+                <b-card :title='product.model'
+                        :img-src="returnUrl(product.photos[0].byteImage)"
                         img-alt="Image"
                         img-width="100%"
                         img-height="200px"
@@ -17,11 +15,14 @@
                         tag="article"
                         v-for="product in products" :key="product.productId" v-bind="product">
                     <b-card-text>
-                        Price: {{product.priceBy}} $
+                        <p>Price: {{product.priceBy}} $</p>
+                        Brand: {{product.brand.nameBrand}}
+                        <h5>Sizes:</h5>
+                        <!--<span v-for="size in product.sizes">
+        {{size.sizeUA}}
+        {{size.count}}
+    </span>-->
                     </b-card-text>
-
-                 
-                  
                     <template v-slot:footer>
                         <b-button pill variant="warning" @click.prevent="deleteProduct(product.productId)">Delete</b-button>
                         <b-button pill variant="default" @click.prevent="showEdit(product)">Edit</b-button>
@@ -31,9 +32,18 @@
                     </template>
                 </b-card>
             </div>
-        
+            <div>
+                <b-button pill variant="info" :disabled="hasPrev == false" @click="prevPage">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Previous
+                </b-button>
+                <b-button pill variant="info" :disabled="hasNext == false"  @click="nextPage">
+                    Next <i class="glyphicon glyphicon-arrow-right"></i>
+                </b-button>
+            </div>
+          
 
-     </div>
+
+        </div>
 </div>
 </template>
 <style scoped>
@@ -63,5 +73,6 @@
         border-radius:3px;
         margin:0 0 10px ;
     }
+   
 </style>
 <script src="./product.ts"></script>

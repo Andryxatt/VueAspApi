@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using VueAsp.Data;
+using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 using VueAsp.ViewModels;
 
@@ -20,18 +21,32 @@ namespace VueAsp.Controllers
     {
         private BazaDataBase db;
         private IHostingEnvironment hostingEnvironment;
-        public ProductController(BazaDataBase _db, IHostingEnvironment _hostingEnvironment)
+        private IRepositoryWrapper repoWrapp;
+        public ProductController(BazaDataBase _db, IHostingEnvironment _hostingEnvironment, IRepositoryWrapper repositoryWrapper)
         {
             db = _db;
             hostingEnvironment = _hostingEnvironment;
+            repoWrapp = repositoryWrapper;
         }
         // GET: api/Product
         [HttpGet]
-        public JsonResult Get()
+        public IActionResult GetProducts([FromQuery] ProductParameters productParameters)
         {
-           
-            var products = db.Products.Include(d=>d.Photos).Include(b=>b.Brand).ToList();
-            return Json(products);
+            var products = repoWrapp.Product.GetProducts(productParameters);
+            //var products = db.Products.Include(d=>d.Photos).Include(b=>b.Brand).ToList();
+            //return Json(products);
+            var metadata = new
+            {
+                products.TotalCount,
+                products.PageSize,
+                products.CurrentPage,
+                products.TotalPages,
+                products.HasNext,
+                products.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            return Ok(products);
         }
         // GET: api/Product/5
         [HttpGet("{id}", Name = "GetProduct")]
@@ -68,14 +83,13 @@ namespace VueAsp.Controllers
         {
 
         }
+        //Delete product and images directory for current product
         // DELETE: api/Product/5
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public string Delete(string id)
         {
             Product product = db.Products.Where(p => p.ProductId == Guid.Parse(id)).FirstOrDefault();
-           
             string path = Path.Combine(hostingEnvironment.WebRootPath, "imagesProduct", product.Model);
-           
             if (Directory.Exists(path))
             {
                 System.IO.DirectoryInfo di = new DirectoryInfo(path);
@@ -97,7 +111,9 @@ namespace VueAsp.Controllers
             }
             db.Products.Remove(product);
             db.SaveChanges();
+            return "Product Deleted";
 
         }
+      
     }
 }

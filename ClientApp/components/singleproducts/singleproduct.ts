@@ -25,19 +25,24 @@ export default class SingleProductComponent extends Vue {
     public prodSizes = [];
     size = new ProdSize();
     mounted() {
-        this.id = this.$route.params.productId;
-        axios.get('api/product/' + this.id).then(response => {
-            this.product = response.data["product"];
-            this.prodSizes = response.data["sizesProd"]
-        }).catch(e => {
-            console.log("error");
-        })
+        this.productSingle();
         axios.get('api/sizes').then(response => {
             this.sizes = response.data
         }).catch(e => {
             console.log("error");
         })
-
+    }
+    productSingle() {
+        
+        this.prodSizes = [];
+        this.id = this.$route.params.productId;
+        console.log(this.id);
+        axios.get('api/product/' + this.id).then(response => {
+            this.product = response.data["product"];
+            this.prodSizes = response.data["sizesProd"];
+        }).catch(e => {
+            console.log("error");
+        })
     }
     //get productsSizes(): string[] {
     //    
@@ -52,27 +57,28 @@ export default class SingleProductComponent extends Vue {
     //}
     showEdit(product: Product) {
         this.product = product;
-        
     }
     returnUrl(obj): string {
         var url = 'data:image/jpeg;base64,' + obj;
         return url;
     }
-    deleteProduct(id: string): void {
-        axios.delete('api/product/' + id).then(response => {
-            console.log("succes");
-        }).catch(e => {
-            console.log("error");
-        })
-        
-    }
-   
     saveSizesProduct() {
         this.formData.append("sizeId", this.size.sizeId)
-        this.formData.append("productId", this.product.productId)
+        this.formData.append("productId", this.id)
         this.formData.append("count", this.size.count.toString())
         axios.post('api/singleProduct', this.formData).then(response => {
-            console.log("succes");
+            this.$toasted.success(response.data + ' size!', {
+                icon: {
+                    name: 'watch',
+                    after: true // this will append the icon to the end of content
+                },
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 4000
+            });
+
+        }).then(response => {
+            this.productSingle();
         }).catch(e => {
             console.log("error");
         })

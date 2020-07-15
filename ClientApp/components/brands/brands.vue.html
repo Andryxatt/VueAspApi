@@ -18,9 +18,10 @@
             <button type="submit" class="go-button" @click.prevent="addBrand">Save</button>
         </form>
         <p v-for="item in brands">
-            {{item.nameBrand}}
+            Name - {{item.nameBrand}} <br />
+            Description - {{item.description}}
         </p>
-       
+
     </div>
 </template>
 

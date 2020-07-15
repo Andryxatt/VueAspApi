@@ -1,11 +1,12 @@
-﻿export interface IProduct  {
-         productId?:string
-         model?: string
-         priceBy?: number
-         brandId?: number
-         subId?: number
-         photos?: string[]
-         brand?: object
+﻿export interface IProduct {
+    productId?: string
+    model?: string
+    priceBy?: number
+    brandId?: number
+    subId?: number
+    photos?: string[]
+    brand?: object
+    sizes?: string[]
 }
 export class Product implements IProduct {
     brandId = 1;
@@ -15,4 +16,5 @@ export class Product implements IProduct {
     productId = "";
     subId = 0;
     brand = {};
+    sizes = [];
 }

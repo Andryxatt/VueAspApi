@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.9</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\api\api.ts" />
     <None Remove="ClientApp\api\http-common.ts" />
     <None Remove="ClientApp\components\brands\brand.model.ts" />
     <None Remove="ClientApp\components\editproduct\editproduct.ts" />
@@ -25,6 +24,9 @@
     <None Remove="ClientApp\components\singleproducts\singleproduct.model.ts" />
     <None Remove="ClientApp\components\sizeproduct\size.model.ts" />
     <None Remove="ClientApp\services\product-service.ts" />
+    <None Remove="ClientApp\store\brands.ts" />
+    <None Remove="ClientApp\store\index.ts" />
+    <None Remove="ClientApp\types.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\api\api.ts" />
     <TypeScriptCompile Include="ClientApp\api\http-common.ts" />
     <TypeScriptCompile Include="ClientApp\components\brands\brand.model.ts" />
     <TypeScriptCompile Include="ClientApp\components\editproduct\editproduct.ts">
@@ -66,6 +67,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\services\product-service.ts" />
+    <TypeScriptCompile Include="ClientApp\store\brands.ts" />
+    <TypeScriptCompile Include="ClientApp\store\index.ts" />
+    <TypeScriptCompile Include="ClientApp\types.ts" />
   </ItemGroup>
 
   <ItemGroup>

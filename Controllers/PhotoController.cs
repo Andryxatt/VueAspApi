@@ -38,44 +38,35 @@ namespace VueAsp.Controllers
         {
             return "value";
         }
+        // Stored list of photo files for model product
         // POST: api/Photo
         [HttpPost]
         public void Post(IFormFileCollection files, Guid productId)
         {
-            List<Photo> photos = new List<Photo>();
             var product = db.Products.Where(d => d.ProductId == productId).FirstOrDefault();
-            string pathModel = Path.Combine(hostingEnvironment.WebRootPath, "imagesProduct",product.Model).ToLower();
-
+            // create directory for product by model name
+            string pathModel = Path.Combine(hostingEnvironment.WebRootPath, "imagesProduct", product.Model).ToLower();
             //if path does not exist -> create it
             if (!Directory.Exists(pathModel)) Directory.CreateDirectory(pathModel);
-            foreach (var fileU in files.GetFiles("files"))
+            if (files.GetFiles("files").Count() > 0)
             {
-                if (fileU.Length > 0)
+                foreach (var fileU in files.GetFiles("files"))
                 {
-                    
-                    string path = Path.Combine(hostingEnvironment.WebRootPath, "imagesProduct", product.Model);
-                   
-                    //using (var fs = new FileStream(Path.Combine(path, fileU.FileName), FileMode.Create))
-                    //{
-                    //    fileU.CopyTo(fs);
-                    //}
                     var image = Image.Load(fileU.OpenReadStream());
                     image.Mutate(x => x.Resize(256, 256));
-                    image.Save(Path.Combine(path, fileU.FileName));
-
+                    image.Save(Path.Combine(pathModel, fileU.FileName));
 
                     Photo photo = new Photo
                     {
                         PhotoId = Guid.NewGuid(),
                         ProductId = productId,
-                        Path = path + fileU.FileName,
-                        ByteImage = System.IO.File.ReadAllBytes(Path.Combine(path, fileU.FileName))
+                        Path = pathModel + fileU.FileName,
+                        ByteImage = System.IO.File.ReadAllBytes(Path.Combine(pathModel, fileU.FileName))
                     };
                     db.Photos.Add(photo);
                 }
+                db.SaveChanges();
             }
-            db.SaveChanges();
-           
         }
         // PUT: api/Photo/5
         [HttpPut("{id}")]

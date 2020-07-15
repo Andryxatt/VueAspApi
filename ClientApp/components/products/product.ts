@@ -18,36 +18,47 @@ import EditProductComponent from '../editproduct/editproduct';
     }
 })
 export default class ProductComponent extends Vue {
+    rows= 100;
+    perPage = 8;
+    currentPage = 1;
+    hasNext = false;
+    hasPrev = false;
     products: IProduct[] = [];
     brands: IBrand[] = [];
     product = new Product();
-    brand = '';
     productId = '';
- 
     showEditKey = false;
     public formData = new FormData();
-    //get productsAll(): IProduct[] {
-    //    axios.get('api/product').then(response => {
-    //        this.products = response.data
-    //    }).catch(e => {
-    //        console.log("error");
-    //    })
-    //    return this.products
-    //}
-   
     mounted() {
-       
-
-        axios.get('api/product').then(response => {
-            this.products = response.data
-        }).catch(e => {
-            console.log("error");
-        })
+        this.AllProducts();
     }
+   
     showEdit(product: Product) {
         this.product = product;
         this.showEditKey = true;
-       
+    }
+    nextPage() {
+        if (this.hasNext)
+            this.currentPage++;
+
+        this.AllProducts();
+    }
+    prevPage() {
+        if (this.hasPrev) 
+            this.currentPage--;
+        
+        this.AllProducts();
+    }
+     AllProducts():void {
+        axios.get('api/product?pageNumber='+this.currentPage+'&pageSize='+this.perPage+'').then(response => {
+            this.products = response.data;
+            this.rows = JSON.parse(response.headers['x-pagination'])['TotalPages'];
+            this.currentPage = JSON.parse(response.headers['x-pagination'])['CurrentPage'];
+            this.hasNext = JSON.parse(response.headers['x-pagination'])['HasNext'];
+            this.hasPrev = JSON.parse(response.headers['x-pagination'])['HasPrevious'];
+        }).catch(e => {
+            console.log("error");
+        })
     }
     returnUrl(obj): string {
         var url = 'data:image/jpeg;base64,' + obj;
@@ -55,11 +66,20 @@ export default class ProductComponent extends Vue {
     }
     deleteProduct(id: string): void {
         axios.delete('api/product/' + id).then(response => {
-            console.log("succes");
+            this.$toasted.info(response.data + ' succesful!', {
+                icon: {
+                    name: 'watch',
+                    after: true // this will append the icon to the end of content
+                },
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 3000
+            });
+            this.AllProducts();
         }).catch(e => {
             console.log("error");
         })
-        
+
     }
-  
+
 }

@@ -20,6 +20,8 @@ namespace VueAsp.Models
         public Guid? SubId { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         public virtual List<Photo> Photos { get; set; }
+        
         public virtual List<ProductMass> MassesProducts { get; set; }
+    
     }
 }

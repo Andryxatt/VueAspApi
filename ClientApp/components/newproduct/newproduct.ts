@@ -31,19 +31,25 @@ export default class NewProductComponent extends Vue {
         axios.post('api/product', 
             this.formData
         ).then(response => {
-            console.log("child method");
+            this.$toasted.success(response.data + ' succesful!', {
+                icon: {
+                    name: 'watch',
+                    after: true // this will append the icon to the end of content
+                },
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 4000
+            });
+            this.$router.go(-1);
         }).catch(e => {
-            console.log("child method");
             console.log("error");
         })
-
     }
     returnUrl(obj: object):string {
         var url = URL.createObjectURL(obj);
         return url;
     }
     slicePhoto(index: number): void {
-        console.log(index)
         this.files.splice(index, 1);
         this.handleFileUpload(this.files);
     }
@@ -52,7 +58,6 @@ export default class NewProductComponent extends Vue {
         this.formData.delete("files");
         for (var i = 0; i < fileList.length; i++) {
             this.formData.append("files", fileList[i], fileList[i].name);
-            
             this.files[i] = fileList[i];
         }
         console.log(this.files);

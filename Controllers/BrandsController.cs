@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VueAsp.Data;
+using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 
 namespace VueAsp.Controllers
@@ -13,16 +14,19 @@ namespace VueAsp.Controllers
     [Route("api/Brands")]
     public class BrandsController : Controller
     {
+        private IRepositoryWrapper _repoWrapp;
         private BazaDataBase db;
-        public BrandsController(BazaDataBase _db)
+        public BrandsController(BazaDataBase _db, IRepositoryWrapper repositoryWrapper)
         {
             db = _db;
+            _repoWrapp = repositoryWrapper;
         }
         // GET: api/Brands
         [HttpGet]
         public JsonResult Get()
         {
-            return Json(db.Brands.ToList());
+            var brands = _repoWrapp.Brand.FindAll();
+            return Json(brands);
         }
 
         // GET: api/Brands/5

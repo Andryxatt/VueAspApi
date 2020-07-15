@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using VueAsp.Data;
 using VueAsp.Models;
@@ -37,9 +38,9 @@ namespace VueAsp.Controllers
         
         // POST: api/SingleProduct
         [HttpPost]
-        public void Post(Guid SizeId, Guid productId, int count)
+        public string Post(Guid SizeId, Guid productId, int count)
         {
-            ProdSizes sizeProd = db.ProdSizes.Where(d => d.ProductId == productId && d.SizeId == SizeId).FirstOrDefault();
+            ProdSizes sizeProd = db.ProdSizes.Where(d => d.ProductId == productId && d.SizeId == SizeId).Include(d=>d.Size).FirstOrDefault();
             try
             {
                 if(sizeProd!=null)
@@ -60,15 +61,17 @@ namespace VueAsp.Controllers
                 }
                
                 db.SaveChanges();
+                
             }
             catch (Exception)
             {
 
                 throw;
             }
-            
-            
-           
+            return "Succes added";
+
+
+
         }
         
         // PUT: api/SingleProduct/5

@@ -16,7 +16,7 @@ namespace VueAsp.Models
         public virtual Product Product { get; set; }
         public int Boxes { get; set; }
         public int PairInBoxes { get; set; }
-        public int PairsTotal { get; set; }
+        public int PairsTotal { get => this.PairInBoxes; set { this.PairInBoxes = this.PairInBoxes * this.Boxes; } }
         public float priceSale { get; set; }
     }
 }
