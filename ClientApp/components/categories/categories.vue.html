@@ -1,0 +1,11 @@
+<template>
+    <div>
+        <label>Name category</label>
+        <input type="text" v-model='category.nameCategory' />
+        <label>Description category</label>
+        <input type="text" v-model="category.description" />
+        <button v-on:click="addCategory">Save</button>
+    </div>
+</template>
+
+<script src="./category.ts"></script>

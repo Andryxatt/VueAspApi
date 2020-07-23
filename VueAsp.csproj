@@ -15,23 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\api\http-common.ts" />
     <None Remove="ClientApp\components\brands\brand.model.ts" />
     <None Remove="ClientApp\components\editproduct\editproduct.ts" />
-    <None Remove="ClientApp\components\photo\photo.model.ts" />
     <None Remove="ClientApp\components\products\newproduct.ts" />
     <None Remove="ClientApp\components\products\product.model.ts" />
     <None Remove="ClientApp\components\singleproducts\singleproduct.model.ts" />
     <None Remove="ClientApp\components\sizeproduct\size.model.ts" />
-    <None Remove="ClientApp\services\product-service.ts" />
-    <None Remove="ClientApp\store\brands.ts" />
-    <None Remove="ClientApp\store\index.ts" />
-    <None Remove="ClientApp\types.ts" />
   </ItemGroup>
 
   <ItemGroup>
 
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
@@ -40,6 +36,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
+    <PackageReference Include="QRCoder" Version="1.3.9" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-rc0003" />
   </ItemGroup>
 
@@ -48,12 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\api\http-common.ts" />
     <TypeScriptCompile Include="ClientApp\components\brands\brand.model.ts" />
     <TypeScriptCompile Include="ClientApp\components\editproduct\editproduct.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="ClientApp\components\photo\photo.model.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\components\newproduct\newproduct.ts" />
@@ -66,16 +59,16 @@
     <TypeScriptCompile Include="ClientApp\components\sizeproduct\size.model.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="ClientApp\services\product-service.ts" />
-    <TypeScriptCompile Include="ClientApp\store\brands.ts" />
-    <TypeScriptCompile Include="ClientApp\store\index.ts" />
-    <TypeScriptCompile Include="ClientApp\types.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\components\sizeproduct\addsize\" />
     <Folder Include="ClientApp\models\" />
     <Folder Include="wwwroot\imagesProduct\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\materialize.js" />
+    <None Include="wwwroot\js\materialize.min.js" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

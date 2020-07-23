@@ -2,45 +2,62 @@ import Vue from 'vue';
 import { Component, Watch, Emit, Prop } from 'vue-property-decorator';
 import axios from 'axios';
 import { IProduct, Product } from '../products/product.model'
-import { IBrand } from '../brands/brand.model';
 import { Carousel, Slide } from 'vue-carousel';
-import PhotoComponent from '../photo/photo';
-import NewProductComponent from '../newproduct/newproduct';
-import EditProductComponent from '../editproduct/editproduct'
 import { IProdSize, ProdSize } from '../sizeproduct/size.model';
 @Component({
     components: {
         Carousel,
         Slide,
-        PhotoComponent,
-        NewProductComponent,
-        EditProductComponent
+      
     }
 })
+
 export default class SingleProductComponent extends Vue {
     public id = '';
     public product = new Product();
     public formData = new FormData();
-    public sizes: ProdSize[] = [];
-    public prodSizes = [];
+    public sizes: Array<ProdSize> = [];
+    public prodSizes: Array<ProdSize> = [];
+    public excludeSizes: Array<ProdSize> = [];
+    qrCode = {};
+   
     size = new ProdSize();
     mounted() {
-        this.productSingle();
+     
         axios.get('api/sizes').then(response => {
             this.sizes = response.data
         }).catch(e => {
             console.log("error");
         })
+        this.productSingle();
+    }
+   Qrcode() {
+       const qrText = window.location.origin + '' + window.location.pathname;
+       console.log(qrText);
+       axios.get('api/singleProduct/qrText=' + qrText).then(response => {
+           
+            console.log(response);
+        }).catch(e => {
+                console.log("error");
+            })
     }
     productSingle() {
-        
+        var self = this;
         this.prodSizes = [];
         this.id = this.$route.params.productId;
-        console.log(this.id);
         axios.get('api/product/' + this.id).then(response => {
             this.product = response.data["product"];
             this.prodSizes = response.data["sizesProd"];
-        }).catch(e => {
+        }).then(res => {
+            for (var i = 0; i < self.prodSizes.length; i++) {
+                self.excludeSizes.push(self.prodSizes[i]['size']);
+            }
+            self.sizes = self.sizes.filter(o => self.excludeSizes.every(
+                (elem) => { return elem.sizeId !== o.sizeId }) );
+         
+        })
+
+            .catch(e => {
             console.log("error");
         })
     }

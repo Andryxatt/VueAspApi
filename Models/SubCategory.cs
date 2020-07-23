@@ -12,6 +12,6 @@ namespace VueAsp.Models
         public string NameSub { get; set; }
         public string Description { get; set; }
         public Guid CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+      
     }
 }

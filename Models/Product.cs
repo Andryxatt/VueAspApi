@@ -18,10 +18,10 @@ namespace VueAsp.Models
         public Guid? BrandId { get; set; }
         public Brand Brand { get; set; }
         public Guid? SubId { get; set; }
-        public virtual SubCategory SubCategory { get; set; }
-        public virtual List<Photo> Photos { get; set; }
-        
-        public virtual List<ProductMass> MassesProducts { get; set; }
+        public  SubCategory SubCategory { get; set; }
+        public  List<Photo> Photos { get; set; }
+        public ICollection<ProdSizes> Sizes { get; set; }
+        public  List<ProductMass> MassesProducts { get; set; }
     
     }
 }

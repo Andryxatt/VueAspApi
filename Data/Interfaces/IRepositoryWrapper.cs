@@ -10,6 +10,7 @@ namespace VueAsp.Data.Interfaces
     {
         IBrandRepository Brand { get; }
         IProductRepository Product { get; }
+        ICategoryRepository Category { get; }
         void Save();
     }
 }

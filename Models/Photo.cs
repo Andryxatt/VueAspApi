@@ -14,7 +14,15 @@ namespace VueAsp.Models
         [Key]
         public Guid PhotoId { get; set; }
         public Guid ProductId { get; set; }
-        public string Path { get; set; }
+        public string Path {
+            get
+            {
+                string mimeType = "image/png";
+                string base64 = Convert.ToBase64String(this.ByteImage);
+                return string.Format("data:{0};base64,{1}", mimeType, base64);
+            }
+            set { } }
         public byte[] ByteImage { get; set; }
+
     }
 }

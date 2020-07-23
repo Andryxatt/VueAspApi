@@ -15,21 +15,128 @@ namespace VueAsp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("ProviderKey");
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
+                });
 
             modelBuilder.Entity("VueAsp.Models.Brand", b =>
                 {
                     b.Property<Guid>("BrandId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description");
 
-                    b.Property<string>("NameBrand")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("NameBrand");
 
                     b.HasKey("BrandId");
 
@@ -39,8 +146,7 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.Cart", b =>
                 {
                     b.Property<Guid>("CartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
                     b.HasKey("CartId");
 
@@ -50,17 +156,13 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.CartProductMass", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CartId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("CartId");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<int>("Count");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("ProductId");
 
                     b.HasKey("Id");
 
@@ -74,17 +176,13 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.CartProductSingle", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CartId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("CartId");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<int>("Count");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("ProductId");
 
                     b.HasKey("Id");
 
@@ -98,14 +196,11 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.Category", b =>
                 {
                     b.Property<Guid>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description");
 
-                    b.Property<string>("NameCategory")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("NameCategory");
 
                     b.HasKey("CategoryId");
 
@@ -115,17 +210,13 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.Photo", b =>
                 {
                     b.Property<Guid>("PhotoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<byte[]>("ByteImage")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<byte[]>("ByteImage");
 
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Path");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("ProductId");
 
                     b.HasKey("PhotoId");
 
@@ -137,26 +228,17 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.ProdSizes", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<int>("Count");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("ProductId");
 
-                    b.Property<Guid?>("ProductSingleSingleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SizeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("SizeId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductSingleSingleId");
 
                     b.HasIndex("SizeId");
 
@@ -166,29 +248,21 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.Product", b =>
                 {
                     b.Property<Guid>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("BrandId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid?>("BrandId");
 
-                    b.Property<string>("Model")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Model");
 
-                    b.Property<float>("PriceBy")
-                        .HasColumnType("real");
+                    b.Property<float>("PriceBy");
 
-                    b.Property<Guid?>("SubCategorySubId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SubId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid?>("SubId");
 
                     b.HasKey("ProductId");
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("SubCategorySubId");
+                    b.HasIndex("SubId");
 
                     b.ToTable("Products");
                 });
@@ -196,23 +270,17 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.ProductMass", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Boxes")
-                        .HasColumnType("int");
+                    b.Property<int>("Boxes");
 
-                    b.Property<int>("PairInBoxes")
-                        .HasColumnType("int");
+                    b.Property<int>("PairInBoxes");
 
-                    b.Property<int>("PairsTotal")
-                        .HasColumnType("int");
+                    b.Property<int>("PairsTotal");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("ProductId");
 
-                    b.Property<float>("priceSale")
-                        .HasColumnType("real");
+                    b.Property<float>("priceSale");
 
                     b.HasKey("Id");
 
@@ -221,45 +289,14 @@ namespace VueAsp.Migrations
                     b.ToTable("ProductMasses");
                 });
 
-            modelBuilder.Entity("VueAsp.Models.ProductSingle", b =>
-                {
-                    b.Property<Guid>("SingleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Boxes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PairInBoxes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PairsTotal")
-                        .HasColumnType("int");
-
-                    b.Property<float>("PriceSale")
-                        .HasColumnType("real");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("SingleId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductSingles");
-                });
-
             modelBuilder.Entity("VueAsp.Models.Size", b =>
                 {
                     b.Property<Guid>("SizeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("SizeUA")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SizeUA");
 
-                    b.Property<string>("SizeUSA")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SizeUSA");
 
                     b.HasKey("SizeId");
 
@@ -269,38 +306,128 @@ namespace VueAsp.Migrations
             modelBuilder.Entity("VueAsp.Models.SubCategory", b =>
                 {
                     b.Property<Guid>("SubId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid>("CategoryId");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description");
 
-                    b.Property<string>("NameSub")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("NameSub");
 
                     b.HasKey("SubId");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("SubCategories");
                 });
 
+            modelBuilder.Entity("VueAsp.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<DateTime?>("Birthday");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("VueAsp.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("VueAsp.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("VueAsp.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("VueAsp.Models.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("VueAsp.Models.CartProductMass", b =>
                 {
-                    b.HasOne("VueAsp.Models.Cart", "Cart")
+                    b.HasOne("VueAsp.Models.Cart")
                         .WithMany("CartProductsMass")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VueAsp.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("VueAsp.Models.CartProductSingle", b =>
@@ -308,55 +435,44 @@ namespace VueAsp.Migrations
                     b.HasOne("VueAsp.Models.Cart", "Cart")
                         .WithMany("CartProductsSingle")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VueAsp.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("VueAsp.Models.Photo", b =>
                 {
-                    b.HasOne("VueAsp.Models.Product", "Product")
+                    b.HasOne("VueAsp.Models.Product")
                         .WithMany("Photos")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("VueAsp.Models.ProdSizes", b =>
                 {
-                    b.HasOne("VueAsp.Models.Product", "Product")
-                        .WithMany()
+                    b.HasOne("VueAsp.Models.Product")
+                        .WithMany("Sizes")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VueAsp.Models.ProductSingle", null)
-                        .WithMany("ProdSizes")
-                        .HasForeignKey("ProductSingleSingleId");
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VueAsp.Models.Size", "Size")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("VueAsp.Models.Product", b =>
                 {
                     b.HasOne("VueAsp.Models.Brand", "Brand")
-                        .WithMany("Products")
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("BrandId");
 
                     b.HasOne("VueAsp.Models.SubCategory", "SubCategory")
                         .WithMany()
-                        .HasForeignKey("SubCategorySubId");
+                        .HasForeignKey("SubId");
                 });
 
             modelBuilder.Entity("VueAsp.Models.ProductMass", b =>
@@ -364,26 +480,7 @@ namespace VueAsp.Migrations
                     b.HasOne("VueAsp.Models.Product", "Product")
                         .WithMany("MassesProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VueAsp.Models.ProductSingle", b =>
-                {
-                    b.HasOne("VueAsp.Models.Product", "Product")
-                        .WithMany("SingleProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VueAsp.Models.SubCategory", b =>
-                {
-                    b.HasOne("VueAsp.Models.Category", "Category")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

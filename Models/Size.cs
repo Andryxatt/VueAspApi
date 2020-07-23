@@ -13,6 +13,7 @@ namespace VueAsp.Models
         public Guid SizeId { get; set; }
         public string SizeUA { get; set; }
         public string SizeUSA { get; set; }
-      
+       
+
     }
 }

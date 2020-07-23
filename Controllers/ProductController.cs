@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using QRCoder;
 using VueAsp.Data;
 using VueAsp.Data.Interfaces;
 using VueAsp.Models;
@@ -44,7 +46,6 @@ namespace VueAsp.Controllers
                 products.HasNext,
                 products.HasPrevious
             };
-
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(products);
         }
@@ -69,8 +70,8 @@ namespace VueAsp.Controllers
                 ProductId = Guid.NewGuid(),
                 BrandId = Guid.Parse(brandId),
                 Model =model,
-                PriceBy = float.Parse(priceBy),
-                SubId = Guid.NewGuid()
+                PriceBy = float.Parse(priceBy)
+                //SubId = Guid.NewGuid()
             };
             db.Products.Add(product);
             db.SaveChanges();

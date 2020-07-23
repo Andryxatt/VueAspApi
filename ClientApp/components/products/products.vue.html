@@ -18,10 +18,16 @@
                         <p>Price: {{product.priceBy}} $</p>
                         Brand: {{product.brand.nameBrand}}
                         <h5>Sizes:</h5>
-                        <!--<span v-for="size in product.sizes">
-        {{size.sizeUA}}
-        {{size.count}}
-    </span>-->
+                        <div v-if="product.sizes.length>0">
+                            <span v-for="size in product.sizes">
+                             {{size.size.sizeUA}} - ({{size.count}})
+                            </span>
+                        </div>
+                        <div v-else>
+                            <span>
+                             No sizes awelible
+                            </span>
+                        </div>
                     </b-card-text>
                     <template v-slot:footer>
                         <b-button pill variant="warning" @click.prevent="deleteProduct(product.productId)">Delete</b-button>
@@ -40,9 +46,6 @@
                     Next <i class="glyphicon glyphicon-arrow-right"></i>
                 </b-button>
             </div>
-          
-
-
         </div>
 </div>
 </template>

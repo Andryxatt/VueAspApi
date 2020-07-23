@@ -9,7 +9,7 @@ using VueAsp.ViewModels;
 
 namespace VueAsp.Data
 {
-    public class ProductRepository : RepositoryBase<Product>, IProductRepository
+    public class ProductRepository : RepositoryBase<Product>, IProductRepository, IDisposable
     {
         public ProductRepository(BazaDataBase repositoryContext)
            : base(repositoryContext)
@@ -18,34 +18,58 @@ namespace VueAsp.Data
 
         public void CreateProduct(Product product)
         {
-            throw new NotImplementedException();
+            RepositoryContext.Products.Add(product);
+            RepositoryContext.SaveChanges();
         }
 
         public void DeleteProduct(Product product)
         {
-            throw new NotImplementedException();
+            RepositoryContext.Products.Remove(product);
+            RepositoryContext.SaveChanges();
         }
 
         public Product GetProductById(Guid productId)
         {
-            throw new NotImplementedException();
+            return RepositoryContext.Products.Find(productId);
+
         }
 
         public PagedList<Product> GetProducts(ProductParameters productParameters)
         {
-            return PagedList<Product>.ToPagedList(FindAll().OrderBy(on => on.Model).Include(d => d.Photos).Include(b => b.Brand),
+            return PagedList<Product>.ToPagedList(FindAll().OrderBy(on => on.Model).Include(d => d.Photos).Include(b => b.Brand).Include(s=>s.Sizes).ThenInclude(p=>p.Size),
                 productParameters.PageNumber,
                 productParameters.PageSize);
         }
 
-        public Product GetProductWithDetails(Guid productId)
+        public Product GetProductWithDetails(string name)
         {
-            throw new NotImplementedException();
+            return RepositoryContext.Products.Where(p => p.Model.Equals(name)).FirstOrDefault();
         }
 
-        public void UpdateProduct(Product dbProduct, Product product)
+        public void UpdateProduct(Product product)
         {
-            throw new NotImplementedException();
+            RepositoryContext.Products.Update(product);
+            RepositoryContext.SaveChanges();
+        }
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    RepositoryContext.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace VueAsp.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            var brands = _repoWrapp.Brand.FindAll();
+            var brands = _repoWrapp.Brand.GetBrands();
             return Json(brands);
         }
 
@@ -46,8 +46,8 @@ namespace VueAsp.Controllers
             saveBrand.Description = brand.Description;
             try
             {
-                db.Brands.Add(saveBrand);
-                db.SaveChanges();
+                _repoWrapp.Brand.Create(saveBrand);
+                _repoWrapp.Save();
             }
             catch (Exception)
             {

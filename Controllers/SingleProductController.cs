@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using QRCoder;
 using VueAsp.Data;
 using VueAsp.Models;
 using VueAsp.ViewModels;
@@ -30,12 +33,24 @@ namespace VueAsp.Controllers
         }
 
         // GET: api/SingleProduct/5
-        [HttpGet("{id}", Name = "GetSingleProduct")]
-        public string Get(int id)
+        [HttpGet("{qrText}")]
+        public IActionResult Get(string qrText)
         {
-            return "value";
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrText,
+            QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            return View(BitmapToBytes(qrCodeImage));
         }
-        
+        private static Byte[] BitmapToBytes(Bitmap img)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
+        }
         // POST: api/SingleProduct
         [HttpPost]
         public string Post(Guid SizeId, Guid productId, int count)
@@ -53,6 +68,7 @@ namespace VueAsp.Controllers
                     ProdSizes prodSize = new ProdSizes
                     {
                         SizeId = SizeId,
+                        Size = db.Sizes.Where(s => s.SizeId == SizeId).FirstOrDefault(),
                         Count = count,
                         Id = Guid.NewGuid(),
                         ProductId = productId

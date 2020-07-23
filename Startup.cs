@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -10,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VueAsp.Data;
 using VueAsp.Services;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Identity;
+using VueAsp.Models;
 
 namespace VueAsp
 {
@@ -22,13 +21,19 @@ namespace VueAsp
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Default DataBase Connection
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BazaDataBase>(options => options.UseSqlServer(connection));
+            //Add Identity Authentication service
+            services.AddIdentity<User, IdentityRole>()
+                        .AddEntityFrameworkStores<BazaDataBase>();
+
             services.AddMvc();
+            //Reposytory Wrapper service
             services.ConfigureRepositoryWrapper();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,18 +51,18 @@ namespace VueAsp
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+          
             app.UseStaticFiles();
-
+            app.UseAuthentication();   
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=ShopHome}/{id?}");
 
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    defaults: new { controller = "Home", action = "ShopHome" });
             });
         }
     }

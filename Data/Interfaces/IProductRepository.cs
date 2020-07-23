@@ -8,13 +8,14 @@ using VueAsp.ViewModels;
 
 namespace VueAsp.Data.Interfaces
 {
-   public interface IProductRepository : IRepositoryBase<Product>
+	public interface IProductRepository : IRepositoryBase<Product>
     {
 		PagedList<Product> GetProducts(ProductParameters productParameters);
 		Product GetProductById(Guid productId);
-		Product GetProductWithDetails(Guid productId);
+		Product GetProductWithDetails(string name);
 		void CreateProduct(Product product);
-		void UpdateProduct(Product dbProduct, Product product);
+		void UpdateProduct(Product product);
 		void DeleteProduct(Product product);
+		
 	}
 }

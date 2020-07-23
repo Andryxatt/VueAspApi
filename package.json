@@ -15,7 +15,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.5.1",
     "style-loader": "^0.13.1",
-    "typescript": "^3.5.1",
+    "typescript": "^3.9.7",
     "url-loader": "^0.5.7",
     "vue": "^2.6.11",
     "vue-carousel": "^0.18.0",
@@ -28,6 +28,7 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "@types/core-js": "^2.5.3",
     "axios": "^0.19.2",
     "vue-mc": "^0.6.0",
     "vue-toasted": "^1.1.28",

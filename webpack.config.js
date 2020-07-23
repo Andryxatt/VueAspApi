@@ -8,14 +8,16 @@ module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
 
     return [{
-        stats: { modules: false },
+        stats: { modules: true },
         context: __dirname,
         resolve: { extensions: [ '.js', '.ts' ] },
-        entry: { 'main': './ClientApp/boot.ts' },
+        entry: {
+            'main': './ClientApp/boot.ts'
+         
+        },
         module: {
             rules: [
                 { test: /\.vue\.html$/, include: /ClientApp/, loader: 'vue-loader', options: { loaders: { js: 'awesome-typescript-loader?silent=true' } } },
-                { test: /\.vue$/, include: /ClientApp/, loader: 'vue-loader' },
                 { test: /\.ts$/, include: /ClientApp/, use: 'awesome-typescript-loader?silent=true' },
                 { test: /\.css$/, use: isDevBuild ? [ 'style-loader', 'css-loader' ] : ExtractTextPlugin.extract({ use: 'css-loader?minimize' }) },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }

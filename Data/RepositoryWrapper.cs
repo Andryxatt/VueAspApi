@@ -38,6 +38,8 @@ namespace VueAsp.Data
             }
         }
 
+        public ICategoryRepository Category => throw new NotImplementedException();
+
         public RepositoryWrapper(BazaDataBase repositoryContext)
         {
             _repoContext = repositoryContext;

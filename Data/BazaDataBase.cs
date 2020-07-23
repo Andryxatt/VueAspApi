@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,12 @@ using VueAsp.Models;
 
 namespace VueAsp.Data
 {
-    public class BazaDataBase : DbContext
+    public class BazaDataBase : IdentityDbContext<User>
     {
         public BazaDataBase(DbContextOptions<BazaDataBase> options)
            : base(options)
         {
+            Database.EnsureCreated();
         }
         //entities
         public DbSet<Brand> Brands { get; set; }

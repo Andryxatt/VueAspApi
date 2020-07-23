@@ -1,27 +1,31 @@
 <template>
     <div>
-        <form>
-            <p>
-                <label for="nameBrand">Name brand</label>
-                <input id="nameBrand"
-                       v-model="brand.nameBrand"
-                       type="text"
-                       name="nameBrand">
-            </p>
-            <p>
-                <label for="description">Description</label>
-                <input id="description"
-                       v-model="brand.description"
-                       type="text"
-                       name="description">
-            </p>
-            <button type="submit" class="go-button" @click.prevent="addBrand">Save</button>
-        </form>
-        <p v-for="item in brands">
-            Name - {{item.nameBrand}} <br />
-            Description - {{item.description}}
-        </p>
-
+        <b-form @submit="onSubmit" class="col-lg-5" @reset="onReset" v-if="show">
+            <b-form-group label="Name brand"
+                          label-for="nameBrand">
+                <b-form-input id="nameBrand"
+                              v-model="brand.nameBrand"
+                              type="text"
+                              required
+                              placeholder="Enter name brand"></b-form-input>
+            </b-form-group>
+            <b-form-group label="Description"
+                          label-for="description">
+                <b-form-input id="description"
+                              v-model="brand.description"
+                              type="text"
+                              required
+                              placeholder="Enter some description"></b-form-input>
+            </b-form-group>
+            <b-button type="submit" variant="primary">Save</b-button>
+            <b-button type="reset" variant="danger">Reset</b-button>
+        </b-form>
+        <b-list-group class="col-lg-5">
+            <b-list-group-item v-for="item in brands" href="#">{{item.nameBrand}}</b-list-group-item>
+        </b-list-group>
+           
+      
+       
     </div>
 </template>
 

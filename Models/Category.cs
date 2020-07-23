@@ -14,6 +14,5 @@ namespace VueAsp.Models
         public Guid CategoryId { get; set; }
         public string NameCategory { get; set; }
         public string Description { get; set; }
-        public virtual List<SubCategory> SubCategories { get; set; }
     }
 }

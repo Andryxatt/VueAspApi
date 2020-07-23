@@ -15,26 +15,45 @@
                 <p>
                     <span v-for="size in prodSizes">{{size.size.sizeUA}}-{{size.count}}; </span>
                 </p>
-                <form method="post">
-                        <b-form-select id="size" class="form-control" v-model="size.sizeId" :options="sizes" value-field="sizeId" text-field="sizeUA">
-                        </b-form-select>
-                        <input type="number" class="form-control" v-model="size.count" value="" />
-                    <b-button @click.prevent="saveSizesProduct()">Save</b-button>
-                </form>
+                <div>
+                    <span class="span-size" v-for="size in sizes">
+                        {{size.sizeUSA}}
+                    </span>
+                    <input type="number" id="size.sizeId" value="" />
+                </div>
+                <b-button @click="Qrcode()">QR</b-button>
+                <!--<form method="post">
+            <b-form-select id="size" class="form-control" v-model="size.sizeId" :options="sizes" value-field="sizeId" text-field="sizeUA">
+            </b-form-select>
+            <input type="number" class="form-control" v-model="size.count" value="" />
+        <b-button @click.prevent="saveSizesProduct()">Save</b-button>
+    </form>-->
             </div>
         </div>
     </div>
 </template>
 <style scoped>
-    img{
-    width:300px;
+    img {
+        width: 300px;
     }
-    form{
-        border:1px solid #a1a1a1;
-        background-color:#d1f8ff;
-        border-radius:5px;
-        padding:5px;
-        margin-bottom:15px;
+
+    form {
+        border: 1px solid #a1a1a1;
+        background-color: #d1f8ff;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 15px;
+    }
+
+    .span-size {
+        display: inline-block;
+        text-align: center;
+        align-content: center;
+        max-width:36px;
+        width:100%;
+        padding:10px;
+        border: 1px solid #3e946d;
+        margin-right:3px;
     }
 </style>
 <script src="./singleproduct.ts"></script>

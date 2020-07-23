@@ -3,7 +3,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import axios from 'axios';
 import { IProduct,Product } from '../products/product.model'
 import { IBrand } from '../brands/brand.model';
-import PhotoComponent from '../photo/photo';
+import  PhotoComponent  from '../photo/photo';
 
 
 @Component({
