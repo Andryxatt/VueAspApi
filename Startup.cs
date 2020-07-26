@@ -33,7 +33,8 @@ namespace VueAsp
             services.AddMvc();
             //Reposytory Wrapper service
             services.ConfigureRepositoryWrapper();
-           
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +52,7 @@ namespace VueAsp
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-          
+            app.UseSession();
             app.UseStaticFiles();
             app.UseAuthentication();   
             app.UseMvc(routes =>
@@ -62,7 +63,7 @@ namespace VueAsp
 
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "ShopHome" });
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
     }

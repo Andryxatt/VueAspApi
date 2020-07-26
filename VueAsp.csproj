@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\components\brands\brand.model.ts" />
+    <None Remove="ClientApp\components\categories\category.model.ts" />
     <None Remove="ClientApp\components\editproduct\editproduct.ts" />
     <None Remove="ClientApp\components\products\newproduct.ts" />
     <None Remove="ClientApp\components\products\product.model.ts" />
@@ -46,6 +47,9 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\components\brands\brand.model.ts" />
+    <TypeScriptCompile Include="ClientApp\components\categories\category.model.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\components\editproduct\editproduct.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -62,7 +66,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\models\" />
     <Folder Include="wwwroot\imagesProduct\" />
   </ItemGroup>
 

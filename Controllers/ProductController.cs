@@ -35,6 +35,8 @@ namespace VueAsp.Controllers
         public IActionResult GetProducts([FromQuery] ProductParameters productParameters)
         {
             var products = repoWrapp.Product.GetProducts(productParameters);
+          
+           
             //var products = db.Products.Include(d=>d.Photos).Include(b=>b.Brand).ToList();
             //return Json(products);
             var metadata = new

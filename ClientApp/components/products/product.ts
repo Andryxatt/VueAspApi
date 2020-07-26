@@ -18,16 +18,17 @@ import EditProductComponent from '../editproduct/editproduct';
     }
 })
 export default class ProductComponent extends Vue {
-    rows= 100;
-    perPage = 8;
-    currentPage = 1;
-    hasNext = false;
-    hasPrev = false;
-    products: IProduct[] = [];
-    brands: IBrand[] = [];
-    product = new Product();
-    productId = '';
-    showEditKey = false;
+    rows= 100
+    perPage = 8
+    currentPage = 1
+    hasNext = false
+    hasPrev = false
+    products: IProduct[] = []
+    brands: IBrand[] = []
+    product = new Product()
+    productId = ''
+    showEditKey = false
+    search=''
     public formData = new FormData();
     mounted() {
         this.AllProducts();
@@ -50,7 +51,7 @@ export default class ProductComponent extends Vue {
         this.AllProducts();
     }
      AllProducts():void {
-        axios.get('api/product?pageNumber='+this.currentPage+'&pageSize='+this.perPage+'').then(response => {
+         axios.get('api/product?pageNumber=' + this.currentPage + '&pageSize=' + this.perPage +'&searchString=' + this.search + '').then(response => {
             this.products = response.data;
             this.rows = JSON.parse(response.headers['x-pagination'])['TotalPages'];
             this.currentPage = JSON.parse(response.headers['x-pagination'])['CurrentPage'];
@@ -59,6 +60,9 @@ export default class ProductComponent extends Vue {
         }).catch(e => {
             console.log("error");
         })
+    }
+    searchP() {
+
     }
     returnUrl(obj): string {
         var url = 'data:image/jpeg;base64,' + obj;

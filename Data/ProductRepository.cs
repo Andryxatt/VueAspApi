@@ -36,6 +36,12 @@ namespace VueAsp.Data
 
         public PagedList<Product> GetProducts(ProductParameters productParameters)
         {
+            if (productParameters.SearchString !=null)
+            {
+                return PagedList<Product>.ToPagedList(FindAll().OrderBy(on => on.Model).Include(d => d.Photos).Include(b => b.Brand).Include(s => s.Sizes).ThenInclude(p => p.Size).Where(p => p.Brand.NameBrand.Contains(productParameters.SearchString) || p.Model.Contains(productParameters.SearchString)),
+              productParameters.PageNumber,
+              productParameters.PageSize);
+            }
             return PagedList<Product>.ToPagedList(FindAll().OrderBy(on => on.Model).Include(d => d.Photos).Include(b => b.Brand).Include(s=>s.Sizes).ThenInclude(p=>p.Size),
                 productParameters.PageNumber,
                 productParameters.PageSize);
@@ -70,6 +76,11 @@ namespace VueAsp.Data
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public IQueryable<Product> GetAllProducts()
+        {
+            return RepositoryContext.Products.OrderBy(on => on.Model).Include(d => d.Photos).Include(b => b.Brand).Include(s => s.Sizes).ThenInclude(p => p.Size);
         }
     }
 }

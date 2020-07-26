@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,40 +9,61 @@ using VueAsp.ViewModels;
 
 namespace VueAsp.Data
 {
-    public class CategoriesRepository : RepositoryBase<Category>, ICategoryRepository
+    public class CategoriesRepository : RepositoryBase<Category>, ICategoryRepository, IDisposable
     {
         public CategoriesRepository(BazaDataBase repositoryContext)
            : base(repositoryContext)
         {
         }
-        public void CreateCategory(Category product)
+        public void CreateCategory(Category category)
         {
-            throw new NotImplementedException();
+            RepositoryContext.Categories.Add(category);
         }
 
-        public void DeleteCategory(Category product)
+        public void DeleteCategory(Category category)
         {
-            throw new NotImplementedException();
+            RepositoryContext.Remove(category);
         }
 
         public PagedList<Category> GetCategories(CategoryParameters categoryParameters)
         {
-            throw new NotImplementedException();
+            return PagedList<Category>.ToPagedList(FindAll().OrderBy(on => on.NameCategory),
+                categoryParameters.PageNumber,
+                categoryParameters.PageSize);
         }
 
-        public Category GetCategoryById(Guid productId)
+        public Category GetCategoryById(Guid categoryId)
         {
-            throw new NotImplementedException();
+            return RepositoryContext.Categories.Find(categoryId);
         }
 
-        public Category GetCategoryWithDetails(Guid productId)
+        public Category GetCategoryWithDetails(Guid categoryId)
         {
-            throw new NotImplementedException();
+           return RepositoryContext.Categories.Find(categoryId);
         }
 
-        public void UpdateCategory(Category dbProduct, Category product)
+        public void UpdateCategory(Category category)
         {
-            throw new NotImplementedException();
+            RepositoryContext.Categories.Update(category);
+        }
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    RepositoryContext.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

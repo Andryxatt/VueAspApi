@@ -10,10 +10,10 @@ namespace VueAsp.Data.Interfaces
     public interface ICategoryRepository : IRepositoryBase<Category>
     {
 		PagedList<Category> GetCategories(CategoryParameters categoryParameters);
-		Category GetCategoryById(Guid productId);
-		Category GetCategoryWithDetails(Guid productId);
-		void CreateCategory(Category product);
-		void UpdateCategory(Category dbProduct, Category product);
-		void DeleteCategory(Category product);
+		Category GetCategoryById(Guid categoryId);
+		Category GetCategoryWithDetails(Guid categoryId);
+		void CreateCategory(Category category);
+		void UpdateCategory(Category category);
+		void DeleteCategory(Category category);
 	}
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VueAsp.Data;
+using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 
 namespace VueAsp.Controllers
@@ -13,23 +15,23 @@ namespace VueAsp.Controllers
     [Route("api/Categories")]
     public class CategoriesController : Controller
     {
-        private BazaDataBase db;
-        public CategoriesController(BazaDataBase _db)
+        private IRepositoryWrapper _repoWrapp;
+        public CategoriesController(IRepositoryWrapper repoWrapp)
         {
-            db = _db;
+            _repoWrapp = repoWrapp;
         }
         // GET: api/Categories
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Category> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _repoWrapp.Category.FindAll();
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}", Name = "GetCategory")]
-        public string Get(int id)
+        public Category Get(Guid id)
         {
-            return "value";
+            return _repoWrapp.Category.GetCategoryById(id);
         }
         
         // POST: api/Categories
@@ -39,21 +41,21 @@ namespace VueAsp.Controllers
             if (category != null)
             {
                 category.CategoryId = Guid.NewGuid();
-                db.Categories.Add(category);
-                db.SaveChanges();
+                _repoWrapp.Category.CreateCategory(category);
+                _repoWrapp.Save();
                 return Json("Category added ");
             }
             else
             {
-
-                return Json("Error");
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return Json(new { IsCreated = false, ErrorMessage = "My error message" });
             }
                 
         }
         
         // PUT: api/Categories/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(Guid id, [FromBody]string value)
         {
         }
         

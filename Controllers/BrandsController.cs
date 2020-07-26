@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VueAsp.Data;
 using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 
@@ -15,10 +10,8 @@ namespace VueAsp.Controllers
     public class BrandsController : Controller
     {
         private IRepositoryWrapper _repoWrapp;
-        private BazaDataBase db;
-        public BrandsController(BazaDataBase _db, IRepositoryWrapper repositoryWrapper)
+        public BrandsController(IRepositoryWrapper repositoryWrapper)
         {
-            db = _db;
             _repoWrapp = repositoryWrapper;
         }
         // GET: api/Brands
@@ -28,14 +21,12 @@ namespace VueAsp.Controllers
             var brands = _repoWrapp.Brand.GetBrands();
             return Json(brands);
         }
-
         // GET: api/Brands/5
         [HttpGet("{id}", Name = "GetBrand")]
-        public string Get(int id)
+        public Brand Get(Guid id)
         {
-            return "value";
+            return _repoWrapp.Brand.GetBrandById(id);
         }
-        
         // POST: api/Brands
         [HttpPost]
         public void Post([FromBody]Brand brand)
@@ -53,19 +44,19 @@ namespace VueAsp.Controllers
             {
                 throw;
             }
-           
         }
-        
         // PUT: api/Brands/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(Guid id, [FromBody]Brand brand)
         {
+            brand.BrandId = id;
+            _repoWrapp.Brand.UpdateBrand(brand);
         }
-        
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Brand brand)
         {
+            _repoWrapp.Brand.DeleteBrand(brand);
         }
     }
 }

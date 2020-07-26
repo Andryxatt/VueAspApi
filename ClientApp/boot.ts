@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 const routes = [
-    { path: '/', component: require('./components/products/products.vue.html') },
+    { path: '/products', component: require('./components/products/products.vue.html') },
     { path: '/brands', component: require('./components/brands/brands.vue.html') },
     { path: '/categories', component: require('./components/categories/categories.vue.html') },
     { path: '/photos', component: require('./components/photo/photos.vue.html') },

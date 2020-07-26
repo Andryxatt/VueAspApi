@@ -1,43 +1,60 @@
-﻿@model IEnumerable<VueAsp.Models.Product>
+﻿@using VueAsp.Models
+@model VueAsp.ViewModels.RazorViewModels.IndexShopViewModel
 @{
     ViewData["Title"] = "ShopHome";
     Layout = "~/Views/Shared/_LayoutShop.cshtml";
 }
 <div class="section no-pad-bot" id="index-banner">
     <div class="container">
-        <br><br>
-        <h1 class="header center orange-text">Starter Template</h1>
-        <div class="row center">
-            <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-        </div>
-        <div class="row center">
-            <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light orange">Get Started</a>
-        </div>
-        <br><br>
-
+        <form asp-action="ShopHome" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Search <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+                    <input type="submit" value="Search" class="btn btn-default" /> 
+                </p>
+            </div>
+        </form>
     </div>
 </div>
+
 <div class="container">
     <div class="section">
-
-        <!--   Icon Section   -->
         <div class="row">
-            <div class="col s12 m4">
-                <div class="icon-block">
-                    @{
-                        foreach (var item in Model)
-                        {
-                            <h2 class="center light-blue-text"><i class="material-icons">@item.Model</i></h2>
-                            <h5 class="center">@item.Brand.NameBrand </h5>
+            @foreach (Product p in Model.Products)
+            {
 
-                            <p class="light">@item.PriceBy</p>
-                            <button>Qe Code</button>
-                        }
-                    }
-
+                <div class="col s12 m3">
+                    <div class="card">
+                        <div class="card-image">
+                            <img src='@p.Photos.FirstOrDefault().Path'>
+                            <span class="card-title">@p.Model</span>
+                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        </div>
+                        <div class="card-content">
+                           @p.PriceBy $
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-    </div>
+            @if (Model.PagePagilList.HasPreviousPage)
+            {
+                <a asp-action="ShopHome"
+                   asp-route-page="@(Model.PagePagilList.PageNumber - 1)"
+                   class="btn btn-outline-dark">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                    Назад
+                </a>
+            }
+            @if (Model.PagePagilList.HasNextPage)
+            {
+                <a asp-action="ShopHome"
+                   asp-route-page="@(Model.PagePagilList.PageNumber + 1)"
+                   class="btn btn-outline-dark">
+                    Вперед
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+        </div>
     <br>
 </div>

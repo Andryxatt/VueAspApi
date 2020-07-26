@@ -1,10 +1,28 @@
 <template>
     <div>
-        <label>Name category</label>
-        <input type="text" v-model='category.nameCategory' />
-        <label>Description category</label>
-        <input type="text" v-model="category.description" />
-        <button v-on:click="addCategory">Save</button>
+        <b-form @submit="onSubmit" class="col-lg-5" @reset="onReset">
+            <b-form-group label="Name category"
+                          label-for="nameCategory">
+                <b-form-input id="nameCategory"
+                              v-model="category.nameCategory"
+                              type="text"
+                              required
+                              placeholder="Enter name category"></b-form-input>
+            </b-form-group>
+            <b-form-group label="Description"
+                          label-for="description">
+                <b-form-input id="description"
+                              v-model="category.description"
+                              type="text"
+                              required
+                              placeholder="Enter some description"></b-form-input>
+            </b-form-group>
+            <b-button type="submit" variant="primary">Save</b-button>
+            <b-button type="reset" variant="danger">Reset</b-button>
+        </b-form>
+        <b-list-group class="col-lg-5">
+            <b-list-group-item v-for="item in categories" href="#">{{item.nameCategory}}</b-list-group-item>
+        </b-list-group>
     </div>
 </template>
 

@@ -4,6 +4,8 @@
             <router-link class="btn btn-primary" to="/newproduct">Create new product</router-link>
             <EditProductComponent v-if="showEditKey" v-bind="product" :product="product" :brands="brands"></EditProductComponent>
             <h2>List of products</h2>
+            <input type="search" @keyup="AllProducts" v-model="search" class="form-control" />
+            <button @click="AllProducts">Search</button>
             <div class="container">
                 <b-card :title='product.model'
                         :img-src="returnUrl(product.photos[0].byteImage)"

@@ -53,7 +53,7 @@ namespace VueAsp.Controllers
                 foreach (var fileU in files.GetFiles("files"))
                 {
                     var image = Image.Load(fileU.OpenReadStream());
-                    image.Mutate(x => x.Resize(256, 256));
+                    image.Mutate(x => x.Resize(500, 500));
                     image.Save(Path.Combine(pathModel, fileU.FileName));
 
                     Photo photo = new Photo

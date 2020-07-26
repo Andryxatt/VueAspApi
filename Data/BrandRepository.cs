@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using VueAsp.Data.Interfaces;
 using VueAsp.Models;
-using VueAsp.ViewModels;
 
 namespace VueAsp.Data
 {
@@ -41,9 +39,10 @@ namespace VueAsp.Data
             return this.RepositoryContext.Brands.Find(brandId);
         }
 
-        public void UpdateBrand(Brand dbBrand, Brand brand)
+        public void UpdateBrand(Brand brand)
         {
             this.RepositoryContext.Brands.Update(brand);
+            this.RepositoryContext.SaveChanges();
         }
         private bool disposed = false;
 

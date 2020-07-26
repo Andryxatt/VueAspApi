@@ -11,7 +11,7 @@ namespace VueAsp.Data
         private BazaDataBase _repoContext;
         private IBrandRepository _brand;
         private IProductRepository _product;
-
+        private ICategoryRepository _category;
         public IBrandRepository Brand
         {
             get
@@ -38,7 +38,18 @@ namespace VueAsp.Data
             }
         }
 
-        public ICategoryRepository Category => throw new NotImplementedException();
+        public ICategoryRepository Category
+        {
+            get
+            {
+                if (_category == null)
+                {
+                    _category = new CategoriesRepository(_repoContext);
+                }
+
+                return _category;
+            }
+        }
 
         public RepositoryWrapper(BazaDataBase repositoryContext)
         {

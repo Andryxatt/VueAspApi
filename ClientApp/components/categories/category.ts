@@ -1,18 +1,16 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import axios from 'axios'
+import { ICategory } from './category.model'
 @Component
 export default class CategoriesComponent extends Vue {
     mounted() {
-        //axios.get('api/brands').then(response => {
-        //    this.brands = response.data
-        //}).catch(e => {
-        //    console.log("error");
-        //})
+        this.Categories();
     }
-    category = {
-        nameCategory: "Name",
-        description: "Description"
+    formData = new FormData();
+    public category:ICategory = {
+        nameCategory: "",
+        description: ""
     }
     categories = [];
 
@@ -23,19 +21,39 @@ export default class CategoriesComponent extends Vue {
             console.log("error");
         })
     }
-    addCategory() {
-        axios.post('api/categories', this.category).then(response => {
+
+
+    onReset(evt) {
+        evt.preventDefault()
+        // Reset our form values
+        this.category.nameCategory = ''
+        this.category.description = ''
+        // Trick to reset/clear native browser form validation state
+    }
+    onSubmit(evt) {
+        evt.preventDefault();
+        axios.post('api/Categories', this.category as ICategory).then(response => {
             this.$toasted.success(response.data + ' succesful!', {
                 icon: {
-                    name: 'watch',
+                    name: 'api',
                     after: true // this will append the icon to the end of content
                 },
                 theme: "toasted-primary",
-                position: "top-right",
+                position: "bottom-center",
                 duration: 4000
             });
+        }).then(res => {
+            this.Categories();
         }).catch(e => {
-            console.log("error")
+            this.$toasted.error(e + ' succesful!', {
+                icon: {
+                    name: 'error',
+                    after: true // this will append the icon to the end of content
+                },
+                theme: "toasted-error",
+                position: "bottom-center",
+                duration: 4000
+            });
         })
     }
 }
