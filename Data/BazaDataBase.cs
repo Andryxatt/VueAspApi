@@ -15,18 +15,20 @@ namespace VueAsp.Data
         {
             Database.EnsureCreated();
         }
-        //entities
+       
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        public DbSet<CartProductMass> CartProductMasses { get; set; }
-        public DbSet<CartProductSingle> cartProductSingles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<ProdSizes> ProdSizes { get; set; }
-        public DbSet<ProductMass> ProductMasses { get; set; }
         public DbSet<Size> Sizes { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<AddressOrder> AddressOrders { get; set; }
+        public DbSet<OrderItems> OrderItems { get; set; }
+
+
 
     }
 }

@@ -5,31 +5,29 @@
                 {{ product.model }}
                 {{ product.brand.nameBrand }}
                 <carousel :per-page="1">
-                    <slide v-for="photo in product.photos">
+                    <slide v-for="photo in product.photos" :key="photo.PhotoId">
                         <img :src="returnUrl(photo.byteImage)" />
                     </slide>
                 </carousel>
             </div>
             <div class="col-lg-6">
-                <h5>Sizes</h5>
+                <h5>Розміри</h5>
                 <p>
-                    <span v-for="size in prodSizes">{{size.size.sizeUA}}-{{size.count}}; </span>
+                    <span v-for="size in prodSizes">{{size.size.sizeEU}}-{{size.count}}; </span>
                 </p>
-                <div>
-                    <span class="span-size" v-for="size in sizes">
-                        {{size.sizeUSA}}
-                    </span>
-                    <input type="number" id="size.sizeId" value="" />
-                </div>
-                <b-button @click="Qrcode()">QR</b-button>
-                <!--<form method="post">
-            <b-form-select id="size" class="form-control" v-model="size.sizeId" :options="sizes" value-field="sizeId" text-field="sizeUA">
-            </b-form-select>
-            <input type="number" class="form-control" v-model="size.count" value="" />
-        <b-button @click.prevent="saveSizesProduct()">Save</b-button>
-    </form>-->
             </div>
+            
         </div>
+        <div class="row">
+                <div class="col-lg-1 check-size" v-for="item in sizes" :key="item.sizeId">
+                   
+                        <label>{{item.sizeEU}}/{{item.sizeUS}}/{{item.cm}}</label>
+                        <input @click="chekedValue(item.sizeId)" class="check-size custom-control-input" type="checkbox" value="item.sizeId" />
+                        <input :id='item.sizeId' disabled class="count-size" type="number" value="0" />
+                    
+                </div>
+                <b-button @click.prevent="saveSizesProduct()">Зберегти</b-button>
+            </div>
     </div>
 </template>
 <style scoped>
@@ -49,11 +47,20 @@
         display: inline-block;
         text-align: center;
         align-content: center;
-        max-width:36px;
-        width:100%;
-        padding:10px;
+        max-width: 36px;
+        width: 100%;
+        padding: 10px;
         border: 1px solid #3e946d;
-        margin-right:3px;
+        margin-right: 3px;
+    }
+
+    .count-size {
+        width: 100%;
+    }
+    .check-size{
+       display:inline;
+       padding:5px;
+       border:1px solid #e4e3e3;
     }
 </style>
 <script src="./singleproduct.ts"></script>

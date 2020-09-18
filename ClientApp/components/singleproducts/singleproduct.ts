@@ -1,14 +1,13 @@
 import Vue from 'vue';
 import { Component, Watch, Emit, Prop } from 'vue-property-decorator';
 import axios from 'axios';
-import { IProduct, Product } from '../products/product.model'
+import { IProduct, Product } from '../../data/models/product.model'
 import { Carousel, Slide } from 'vue-carousel';
-import { IProdSize, ProdSize } from '../sizeproduct/size.model';
+import { IProdSize, ProdSize } from '../../data/models/size.model';
 @Component({
     components: {
         Carousel,
         Slide,
-      
     }
 })
 
@@ -19,11 +18,11 @@ export default class SingleProductComponent extends Vue {
     public sizes: Array<ProdSize> = [];
     public prodSizes: Array<ProdSize> = [];
     public excludeSizes: Array<ProdSize> = [];
+    saveSizes = [{}];
     qrCode = {};
-   
+    isDisable = true;
     size = new ProdSize();
     mounted() {
-     
         axios.get('api/sizes').then(response => {
             this.sizes = response.data
         }).catch(e => {
@@ -31,16 +30,7 @@ export default class SingleProductComponent extends Vue {
         })
         this.productSingle();
     }
-   Qrcode() {
-       const qrText = window.location.origin + '' + window.location.pathname;
-       console.log(qrText);
-       axios.get('api/singleProduct/qrText=' + qrText).then(response => {
-           
-            console.log(response);
-        }).catch(e => {
-                console.log("error");
-            })
-    }
+  
     productSingle() {
         var self = this;
         this.prodSizes = [];
@@ -48,42 +38,39 @@ export default class SingleProductComponent extends Vue {
         axios.get('api/product/' + this.id).then(response => {
             this.product = response.data["product"];
             this.prodSizes = response.data["sizesProd"];
-        }).then(res => {
-            for (var i = 0; i < self.prodSizes.length; i++) {
-                self.excludeSizes.push(self.prodSizes[i]['size']);
-            }
-            self.sizes = self.sizes.filter(o => self.excludeSizes.every(
-                (elem) => { return elem.sizeId !== o.sizeId }) );
-         
-        })
-
-            .catch(e => {
+        }).catch(e => {
             console.log("error");
         })
     }
-    //get productsSizes(): string[] {
-    //    
 
-    //    axios.get('api/product/' + this.id).then(response => {
-    //        this.prodSizes = response.data.sizesProd
-    //        this.product = response.data.product
-    //    }).catch(e => {
-    //        console.log("error");
-    //    })
-    //    return this.prodSizes
-    //}
+    chekedValue(item) {
+        (document.getElementById(item) as HTMLInputElement).disabled ? (document.getElementById(item) as HTMLInputElement).disabled = false : (document.getElementById(item) as HTMLInputElement).disabled = true;
+    }
+
     showEdit(product: Product) {
         this.product = product;
     }
+
     returnUrl(obj): string {
         var url = 'data:image/jpeg;base64,' + obj;
         return url;
     }
+
     saveSizesProduct() {
-        this.formData.append("sizeId", this.size.sizeId)
-        this.formData.append("productId", this.id)
-        this.formData.append("count", this.size.count.toString())
-        axios.post('api/singleProduct', this.formData).then(response => {
+        this.saveSizes.splice(0, 1);
+        var selectedSizes = document.getElementsByClassName("count-size");
+        for (var i = 0; i < selectedSizes.length; i++) {
+            var size = {
+                productId: this.id,
+                sizeId: selectedSizes[i]['id'],
+                count: selectedSizes[i]['value']
+            }
+            if (size.count > 0) {
+                this.saveSizes.push(size);
+            }
+        };
+
+        axios.post('api/singleProduct', this.saveSizes).then(response => {
             this.$toasted.success(response.data + ' size!', {
                 icon: {
                     name: 'watch',
@@ -92,12 +79,8 @@ export default class SingleProductComponent extends Vue {
                 theme: "toasted-primary",
                 position: "top-right",
                 duration: 4000
-            });
-
-        }).then(response => {
-            this.productSingle();
-        }).catch(e => {
-            console.log("error");
+            })
+            this.saveSizes = [];
         })
     }
 }

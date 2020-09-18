@@ -3,16 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>3.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
+    <ApplicationIcon></ApplicationIcon>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="wwwroot\imagesProduct\10594\**" />
-    <Content Remove="wwwroot\imagesProduct\10594\**" />
-    <EmbeddedResource Remove="wwwroot\imagesProduct\10594\**" />
-    <None Remove="wwwroot\imagesProduct\10594\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="ClientApp\components\brands\brand.model.ts" />
@@ -22,13 +17,19 @@
     <None Remove="ClientApp\components\products\product.model.ts" />
     <None Remove="ClientApp\components\singleproducts\singleproduct.model.ts" />
     <None Remove="ClientApp\components\sizeproduct\size.model.ts" />
+    <None Remove="ClientApp\data\models\subcategory.model.ts" />
+    <None Remove="ClientApp\store\index.ts" />
   </ItemGroup>
 
   <ItemGroup>
 
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Server.IIS" Version="2.2.6" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
@@ -46,23 +47,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\components\brands\brand.model.ts" />
-    <TypeScriptCompile Include="ClientApp\components\categories\category.model.ts">
+    <TypeScriptCompile Include="ClientApp\data\models\brand.model.ts" />
+    <TypeScriptCompile Include="ClientApp\data\models\category.model.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\components\editproduct\editproduct.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\components\newproduct\newproduct.ts" />
-    <TypeScriptCompile Include="ClientApp\components\products\product.model.ts">
+    <TypeScriptCompile Include="ClientApp\data\models\product.model.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="ClientApp\components\singleproducts\singleproduct.model.ts">
+    <TypeScriptCompile Include="ClientApp\data\models\singleproduct.model.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="ClientApp\components\sizeproduct\size.model.ts">
+    <TypeScriptCompile Include="ClientApp\data\models\size.model.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\data\models\subcategory.model.ts" />
+    <TypeScriptCompile Include="ClientApp\store\index.ts" />
   </ItemGroup>
 
   <ItemGroup>

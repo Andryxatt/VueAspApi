@@ -129,6 +129,36 @@ namespace VueAsp.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("VueAsp.Models.AddressOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("CountryCode");
+
+                    b.Property<string>("Lat");
+
+                    b.Property<string>("Lng");
+
+                    b.Property<string>("NumberAppartments");
+
+                    b.Property<string>("NumberBuiding");
+
+                    b.Property<Guid>("OrderId");
+
+                    b.Property<string>("Streat");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("AddressOrders");
+                });
+
             modelBuilder.Entity("VueAsp.Models.Brand", b =>
                 {
                     b.Property<Guid>("BrandId")
@@ -153,44 +183,29 @@ namespace VueAsp.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("VueAsp.Models.CartProductMass", b =>
+            modelBuilder.Entity("VueAsp.Models.CartProduct", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int?>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid>("CartId");
+                    b.Property<Guid?>("CartId");
 
-                    b.Property<int>("Count");
+                    b.Property<Guid?>("ProductId");
 
-                    b.Property<Guid>("ProductId");
+                    b.Property<int>("Quontity");
 
-                    b.HasKey("Id");
+                    b.Property<Guid?>("SelectedSizeId");
+
+                    b.HasKey("id");
 
                     b.HasIndex("CartId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartProductMasses");
-                });
+                    b.HasIndex("SelectedSizeId");
 
-            modelBuilder.Entity("VueAsp.Models.CartProductSingle", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("CartId");
-
-                    b.Property<int>("Count");
-
-                    b.Property<Guid>("ProductId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("cartProductSingles");
+                    b.ToTable("CartProduct");
                 });
 
             modelBuilder.Entity("VueAsp.Models.Category", b =>
@@ -205,6 +220,60 @@ namespace VueAsp.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("VueAsp.Models.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateConfirm");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("DeliveryType");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("FirtsName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("Mobile");
+
+                    b.Property<float>("Summa");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<Guid?>("UserId");
+
+                    b.Property<bool>("isApplayed");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("VueAsp.Models.OrderItems", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("OrderId");
+
+                    b.Property<Guid>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("VueAsp.Models.Photo", b =>
@@ -252,11 +321,31 @@ namespace VueAsp.Migrations
 
                     b.Property<Guid?>("BrandId");
 
+                    b.Property<int?>("CountBoxes");
+
+                    b.Property<int?>("CountPairsInBox");
+
+                    b.Property<int?>("DiscountUAH");
+
+                    b.Property<int?>("DiscountUS");
+
                     b.Property<string>("Model");
 
                     b.Property<float>("PriceBy");
 
+                    b.Property<float>("PriceSalleUAH");
+
+                    b.Property<float>("PriceSalleUS");
+
+                    b.Property<string>("SizesInBox");
+
                     b.Property<Guid?>("SubId");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<bool>("isDiscount");
 
                     b.HasKey("ProductId");
 
@@ -267,36 +356,20 @@ namespace VueAsp.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("VueAsp.Models.ProductMass", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Boxes");
-
-                    b.Property<int>("PairInBoxes");
-
-                    b.Property<int>("PairsTotal");
-
-                    b.Property<Guid>("ProductId");
-
-                    b.Property<float>("priceSale");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductMasses");
-                });
-
             modelBuilder.Entity("VueAsp.Models.Size", b =>
                 {
                     b.Property<Guid>("SizeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("SizeUA");
+                    b.Property<string>("CM");
 
-                    b.Property<string>("SizeUSA");
+                    b.Property<int>("Floor");
+
+                    b.Property<string>("SizeEU");
+
+                    b.Property<string>("SizeUK");
+
+                    b.Property<string>("SizeUS");
 
                     b.HasKey("SizeId");
 
@@ -417,24 +490,34 @@ namespace VueAsp.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("VueAsp.Models.CartProductMass", b =>
+            modelBuilder.Entity("VueAsp.Models.AddressOrder", b =>
                 {
-                    b.HasOne("VueAsp.Models.Cart")
-                        .WithMany("CartProductsMass")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("VueAsp.Models.Product", "Product")
+                    b.HasOne("VueAsp.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("VueAsp.Models.CartProductSingle", b =>
+            modelBuilder.Entity("VueAsp.Models.CartProduct", b =>
                 {
-                    b.HasOne("VueAsp.Models.Cart", "Cart")
+                    b.HasOne("VueAsp.Models.Cart")
                         .WithMany("CartProductsSingle")
-                        .HasForeignKey("CartId")
+                        .HasForeignKey("CartId");
+
+                    b.HasOne("VueAsp.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("VueAsp.Models.ProdSizes", "SelectedSize")
+                        .WithMany()
+                        .HasForeignKey("SelectedSizeId");
+                });
+
+            modelBuilder.Entity("VueAsp.Models.OrderItems", b =>
+                {
+                    b.HasOne("VueAsp.Models.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VueAsp.Models.Product", "Product")
@@ -473,14 +556,6 @@ namespace VueAsp.Migrations
                     b.HasOne("VueAsp.Models.SubCategory", "SubCategory")
                         .WithMany()
                         .HasForeignKey("SubId");
-                });
-
-            modelBuilder.Entity("VueAsp.Models.ProductMass", b =>
-                {
-                    b.HasOne("VueAsp.Models.Product", "Product")
-                        .WithMany("MassesProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -9,52 +9,168 @@
         <form asp-action="ShopHome" method="get">
             <div class="form-actions no-color">
                 <p>
-                    Search <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-                    <input type="submit" value="Search" class="btn btn-default" /> 
+                    Пошук <input type="text" id="term" name="SearchString" value="@ViewData["currentFilter"]" />
+                    <input type="submit" value="Пошук" class="btn btn-default" />
                 </p>
             </div>
         </form>
     </div>
 </div>
-
 <div class="container">
     <div class="section">
         <div class="row">
-            @foreach (Product p in Model.Products)
-            {
-
-                <div class="col s12 m3">
-                    <div class="card">
-                        <div class="card-image">
-                            <img src='@p.Photos.FirstOrDefault().Path'>
-                            <span class="card-title">@p.Model</span>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+            <div class="col m2">
+                @await Html.PartialAsync("_ControlPanel")
+            </div>
+            <div class="col m10">
+                @foreach (Product p in Model.Products)
+                {
+                    if (p.Sizes.Count() > 0)
+                    {
+                        <div class="col s12 m4">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img class="img_card" src='@p.Photos.FirstOrDefault().Path'>
+                                    <a title="Add to cart" class="btn-floating halfway-fab waves-effect waves-light red btnCartAdd" disabled onclick="addToCart()" id="prod_@p.ProductId"><i class="material-icons">add_shopping_cart</i></a>
+                                </div>
+                                <div class="card-content">
+                                    <span class="sp-1">Model @p.Model</span>
+                                    @p.PriceBy $
+                                    <div class="sizes">
+                                        <input type="hidden" class="prod" id="@p.ProductId" />
+                                        @if (p.Sizes.Count() > 0)
+                                        {
+                                            @foreach (var item in p.Sizes)
+                                            {
+                                                <div class="avelible-size" id="@item.Size.SizeId">@item.Size.SizeEU</div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-content">
-                           @p.PriceBy $
-                        </div>
-                    </div>
-                </div>
-            }
+                    }
+                }
+            </div>
         </div>
-            @if (Model.PagePagilList.HasPreviousPage)
-            {
-                <a asp-action="ShopHome"
-                   asp-route-page="@(Model.PagePagilList.PageNumber - 1)"
-                   class="btn btn-outline-dark">
-                    <i class="glyphicon glyphicon-chevron-left"></i>
-                    Назад
-                </a>
-            }
-            @if (Model.PagePagilList.HasNextPage)
-            {
-                <a asp-action="ShopHome"
-                   asp-route-page="@(Model.PagePagilList.PageNumber + 1)"
-                   class="btn btn-outline-dark">
-                    Вперед
-                    <i class="glyphicon glyphicon-chevron-right"></i>
-                </a>
-            }
-        </div>
+        @if (Model.PagePagilList.HasPreviousPage)
+        {
+            <a asp-action="ShopHome"
+               asp-route-page="@(Model.PagePagilList.PageNumber - 1)"
+               class="btn btn-outline-dark">
+                <i class="glyphicon glyphicon-chevron-left"></i>
+                Назад
+            </a>
+        }
+        @if (Model.PagePagilList.HasNextPage)
+        {
+            <a asp-action="ShopHome"
+               asp-route-page="@(Model.PagePagilList.PageNumber + 1)"
+               class="btn btn-outline-dark">
+                Вперед
+                <i class="glyphicon glyphicon-chevron-right"></i>
+            </a>
+        }
+    </div>
     <br>
 </div>
+<style>
+    .sp1 {
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .avelible-size {
+        background-color: #e1f5fe;
+        padding: 10px;
+        margin-top: 10px;
+        display: inline-flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .activeSize {
+        background-color: #87c9e6;
+    }
+
+    .img_card {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+@section scripts{
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        var id = "";
+        var productId = "";
+        $(".avelible-size").click(function () {
+            //$(this).hasClass("activeSize") ?  $(this).removeClass("activeSize") : $(this).addClass("activeSize");
+            id = $(this).attr('id');
+            productId = $(this).closest(".sizes").find('input').attr('id');
+            if ($(this).hasClass("activeSize")) {
+                $(this).removeClass("activeSize")
+                $('#prod_' + productId).attr('disabled', true);
+            }
+            else {
+                $(".btnCartAdd").attr('disabled', true);
+                $(".avelible-size").removeClass("activeSize")
+                $(this).addClass("activeSize")
+                $('#prod_' + productId).removeAttr('disabled');
+            }
+        })
+        function addToCart() {
+            $.ajax({
+                type: "POST",
+                url: "/Buy/" + productId + "/" + id,
+                data: JSON.stringify(productId),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+                        $("#count").text(response);
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+        $(document).ready(function () {
+            $('#term').autocomplete({
+                source: '/searchmodel'
+            });
+        });
+     
+        function searchProduct() {
+            $.ajax({
+                type: "POST",
+                url: "/search/" + productId + "/" + id,
+                data: JSON.stringify(productId),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+                        $("#count").text(response);
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    </script>
+}

@@ -30,8 +30,7 @@ namespace VueAsp.Data
 
         public Product GetProductById(Guid productId)
         {
-            return RepositoryContext.Products.Find(productId);
-
+            return RepositoryContext.Products.Where(prod=>prod.ProductId == productId).Include(p=>p.Photos).Include(b=>b.Brand).Include(s=>s.Sizes).FirstOrDefault();
         }
 
         public PagedList<Product> GetProducts(ProductParameters productParameters)
@@ -80,7 +79,16 @@ namespace VueAsp.Data
 
         public IQueryable<Product> GetAllProducts()
         {
-            return RepositoryContext.Products.OrderBy(on => on.Model).Include(d => d.Photos).Include(b => b.Brand).Include(s => s.Sizes).ThenInclude(p => p.Size);
+            var products = RepositoryContext.Products.OrderBy(p => p.Model).Include(d => d.Photos).Include(b => b.Brand).Include(s => s.Sizes).ThenInclude(p => p.Size);
+            foreach (var product in products)
+            {
+                product.Sizes = product.Sizes.OrderBy(m => m.Size.SizeEU).ToList();
+
+            }
+            return products;
+
         }
+
+      
     }
 }

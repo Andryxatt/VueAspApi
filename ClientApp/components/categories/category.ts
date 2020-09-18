@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import axios from 'axios'
-import { ICategory } from './category.model'
+import { ICategory } from '../../data/models/category.model'
 @Component
 export default class CategoriesComponent extends Vue {
     mounted() {

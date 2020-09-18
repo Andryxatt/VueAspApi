@@ -55,14 +55,20 @@ namespace VueAsp.Controllers
         
         // PUT: api/Categories/5
         [HttpPut("{id}")]
-        public void Put(Guid id, [FromBody]string value)
+        public void Put(Guid id, [FromBody]Category category)
         {
+            category.CategoryId = id;
+            _repoWrapp.Category.UpdateCategory(category);
+            _repoWrapp.Save();
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Category category)
         {
+            _repoWrapp.Category.DeleteCategory(category);
+            _repoWrapp.Save();
+
         }
     }
 }

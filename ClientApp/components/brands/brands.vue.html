@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <b-form @submit="onSubmit" class="col-lg-5" @reset="onReset" v-if="show">
+    <div class="row">
+        <b-form @submit.stop.prevent="onSubmit" class="col-sm-7" @reset="onReset" v-if="show">
             <b-form-group label="Name brand"
                           label-for="nameBrand">
                 <b-form-input id="nameBrand"
                               v-model="brand.nameBrand"
                               type="text"
-                              required
-                              placeholder="Enter name brand"></b-form-input>
+                           ></b-form-input>
+               
             </b-form-group>
             <b-form-group label="Description"
                           label-for="description">
@@ -19,11 +19,43 @@
             </b-form-group>
             <b-button type="submit" variant="primary">Save</b-button>
             <b-button type="reset" variant="danger">Reset</b-button>
+            <b-button v-if="update" type="button" @click="saveUpdate" variant="primary">Update</b-button>
         </b-form>
-        <b-list-group class="col-lg-5">
-            <b-list-group-item v-for="item in brands" href="#">{{item.nameBrand}}</b-list-group-item>
-        </b-list-group>
+        <div class="col-sm-6">
+            <h3>List pf brands</h3>
+            <b-list-group class="">
+                <b-list-group-item class="list_item" v-for="item in brands" :key="item.brandId" href="#">
+
+                    <h4>{{item.nameBrand}}</h4>
+                    <div class="desc_div">{{item.description}}</div>
+                    <b-button variant="default" @click="editBrand(item.brandId)">Edit</b-button>
+                </b-list-group-item>
+            </b-list-group>
+            <div>
+                <b-button pill variant="info" :disabled="hasPrev == false" @click="prevPage">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Previous
+                </b-button>
+                <b-button pill variant="info" :disabled="hasNext == false" @click="nextPage">
+                    Next <i class="glyphicon glyphicon-arrow-right"></i>
+                </b-button>
+            </div>
+        </div>
+        
     </div>
 </template>
-
+<style>
+    .desc_div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .list_item:hover .desc_div {
+        white-space: normal;
+    }
+    .list_item {
+        background-color: aliceblue;
+        border:none;
+    }
+  
+</style>
 <script src="./brand.ts"></script>

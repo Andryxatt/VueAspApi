@@ -1,0 +1,33 @@
+<template>
+    <div>
+        <b-form @submit="onSubmit" class="col-lg-5" @reset="onReset">
+            <input type="hidden" name="categoryId"  :value="catId" />
+            <b-form-group label="Name sub category"
+                          label-for="nameSub">
+                <b-form-input id="nameSub"
+                              v-model="subCategory.nameSub"
+                              type="text"
+                              required
+                              placeholder="Enter name sub category"></b-form-input>
+            </b-form-group>
+            <b-form-group label="Description"
+                          label-for="description">
+                <b-form-input id="description"
+                              v-model="subCategory.description"
+                              type="text"
+                              required
+                              placeholder="Enter some description"></b-form-input>
+            </b-form-group>
+            <b-button type="submit" variant="primary">Save</b-button>
+            <b-button type="reset" variant="danger">Reset</b-button>
+        </b-form>
+    <b-list-group class="col-lg-5">
+        <b-list-group-item v-for="item in subCategories" :key="item.subId" href="#">
+            {{item.nameSub}}
+        </b-list-group-item>
+    </b-list-group>
+
+    </div>
+</template>
+
+<script src="./subcategory.ts"></script>

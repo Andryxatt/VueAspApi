@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using QRCoder;
-using VueAsp.Data;
 using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 using VueAsp.ViewModels;
@@ -21,20 +17,19 @@ namespace VueAsp.Controllers
     [Route("api/Product")]
     public class ProductController : Controller
     {
-        private BazaDataBase db;
         private IHostingEnvironment hostingEnvironment;
-        private IRepositoryWrapper repoWrapp;
-        public ProductController(BazaDataBase _db, IHostingEnvironment _hostingEnvironment, IRepositoryWrapper repositoryWrapper)
+        private IRepositoryWrapper _repoWrapp;
+        public ProductController(IHostingEnvironment _hostingEnvironment, IRepositoryWrapper repositoryWrapper)
         {
-            db = _db;
+           
             hostingEnvironment = _hostingEnvironment;
-            repoWrapp = repositoryWrapper;
+            _repoWrapp = repositoryWrapper;
         }
         // GET: api/Product
         [HttpGet]
         public IActionResult GetProducts([FromQuery] ProductParameters productParameters)
         {
-            var products = repoWrapp.Product.GetProducts(productParameters);
+            var products = _repoWrapp.Product.GetProducts(productParameters);
           
            
             //var products = db.Products.Include(d=>d.Photos).Include(b=>b.Brand).ToList();
@@ -55,8 +50,8 @@ namespace VueAsp.Controllers
         [HttpGet("{id}", Name = "GetProduct")]
         public JsonResult Get(Guid id)
         {
-            var product = db.Products.Where(d=>d.ProductId == id).Include(d => d.Photos).Include(b => b.Brand).FirstOrDefault();
-            var sizesProd = db.ProdSizes.Where(d => d.ProductId == id).Include(s=>s.Size).ToList();
+            var product = _repoWrapp.Product.GetProductById(id);
+            var sizesProd = _repoWrapp.SizePorduct.GetProductSizes(product.ProductId);
             return Json( new { 
                 product,
                 sizesProd });
@@ -64,34 +59,46 @@ namespace VueAsp.Controllers
         }
         // POST: api/Product
         [HttpPost]
-        public void Post(IFormFileCollection files, string model, string priceBy, string brandId)
+        public void Post(IFormFileCollection files, string model, string priceBy, string brandId, int countBoxes, int countPairsInBox, string sizesInBox, float priceSalleUS, float priceSalleUAH, bool isDiscount, int discountUAH, int discountUS)
         {
-
             Product product = new Product
             {
                 ProductId = Guid.NewGuid(),
                 BrandId = Guid.Parse(brandId),
-                Model =model,
-                PriceBy = float.Parse(priceBy)
+                Model = model,
+                PriceBy = float.Parse(priceBy),
+                CountBoxes = countBoxes,
+                CountPairsInBox = countPairsInBox,
+                SizesInBox = sizesInBox,
+                DiscountUAH = discountUAH,
+                isDiscount = isDiscount,
+                DiscountUS = discountUS,
+                PriceSalleUAH = priceSalleUAH,
+                PriceSalleUS = priceSalleUS
                 //SubId = Guid.NewGuid()
             };
-            db.Products.Add(product);
-            db.SaveChanges();
-            PhotoController photo = new PhotoController(db, hostingEnvironment);
+            _repoWrapp.Product.Create(product);
+            _repoWrapp.Save();
+            PhotoController photo = new PhotoController(_repoWrapp, hostingEnvironment);
             photo.Post(files, product.ProductId);
         }
         // PUT: api/Product/5
         [HttpPut]
-        public void Put(Guid id, string model, string priceBy, string brandId)
+        public void Put([FromBody] Product product)
         {
-
+            product.Brand = _repoWrapp.Brand.GetBrandById(product.BrandId);
+            if (ModelState.IsValid)
+            {
+                _repoWrapp.Product.UpdateProduct(product);
+                _repoWrapp.Save();
+            }
         }
         //Delete product and images directory for current product
         // DELETE: api/Product/5
         [HttpDelete("{id}")]
-        public string Delete(string id)
+        public string Delete(Guid id)
         {
-            Product product = db.Products.Where(p => p.ProductId == Guid.Parse(id)).FirstOrDefault();
+            Product product = _repoWrapp.Product.GetProductById(id);
             string path = Path.Combine(hostingEnvironment.WebRootPath, "imagesProduct", product.Model);
             if (Directory.Exists(path))
             {
@@ -100,8 +107,8 @@ namespace VueAsp.Controllers
                 {
                     file.Delete();
                 }
-                List<Photo> photos = db.Photos.Where(p => p.ProductId == product.ProductId).ToList();
-                db.Photos.RemoveRange(photos);
+                IEnumerable<Photo> photos = _repoWrapp.Photo.GetPhotosByProductId(id);
+                _repoWrapp.Photo.DeletePhotoRange(photos);
              
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
@@ -112,11 +119,9 @@ namespace VueAsp.Controllers
                     Directory.Delete(path);
                 }
             }
-            db.Products.Remove(product);
-            db.SaveChanges();
+            _repoWrapp.Product.Delete(product);
+            _repoWrapp.Save();
             return "Product Deleted";
-
         }
-      
     }
 }

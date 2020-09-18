@@ -4,14 +4,12 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using VueAsp.Data;
+using VueAsp.Data.Interfaces;
 using VueAsp.Models;
-using VueAsp.ViewModels;
+
 
 namespace VueAsp.Controllers
 {
@@ -19,11 +17,11 @@ namespace VueAsp.Controllers
     [Route("api/Photo")]
     public class PhotoController : Controller
     {
-        private BazaDataBase db;
+        private IRepositoryWrapper _repoWrapp;
         private IHostingEnvironment hostingEnvironment;
-        public PhotoController(BazaDataBase _db, IHostingEnvironment _environment)
+        public PhotoController(IRepositoryWrapper wrapper, IHostingEnvironment _environment)
         {
-            db = _db;
+            _repoWrapp = wrapper;
             hostingEnvironment = _environment;
         }
         // GET: api/Photo
@@ -38,12 +36,12 @@ namespace VueAsp.Controllers
         {
             return "value";
         }
-        // Stored list of photo files for model product
+        // Stored list of photo files for single product
         // POST: api/Photo
         [HttpPost]
         public void Post(IFormFileCollection files, Guid productId)
         {
-            var product = db.Products.Where(d => d.ProductId == productId).FirstOrDefault();
+            var product = _repoWrapp.Product.GetProductById(productId);
             // create directory for product by model name
             string pathModel = Path.Combine(hostingEnvironment.WebRootPath, "imagesProduct", product.Model).ToLower();
             //if path does not exist -> create it
@@ -53,8 +51,9 @@ namespace VueAsp.Controllers
                 foreach (var fileU in files.GetFiles("files"))
                 {
                     var image = Image.Load(fileU.OpenReadStream());
-                    image.Mutate(x => x.Resize(500, 500));
+                    image.Mutate(x => x.Resize(640, 480));
                     image.Save(Path.Combine(pathModel, fileU.FileName));
+                 
 
                     Photo photo = new Photo
                     {
@@ -63,9 +62,9 @@ namespace VueAsp.Controllers
                         Path = pathModel + fileU.FileName,
                         ByteImage = System.IO.File.ReadAllBytes(Path.Combine(pathModel, fileU.FileName))
                     };
-                    db.Photos.Add(photo);
+                    _repoWrapp.Photo.CreatePhoto(photo);
                 }
-                db.SaveChanges();
+                _repoWrapp.Save();
             }
         }
         // PUT: api/Photo/5
@@ -79,8 +78,5 @@ namespace VueAsp.Controllers
         {
 
         }
-
-
-
     }
 }

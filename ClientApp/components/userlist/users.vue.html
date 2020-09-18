@@ -1,0 +1,16 @@
+<template>
+    <div>
+        User List
+        <ul v-if="true">
+            <li v-for="user in users" :key="user.id">
+                <div>
+                    <span>{{user.userName}}</span>
+                    <router-link :to="{ path: '/user/'+ user.id}">Ролі користувача</router-link>
+                </div> 
+            </li>
+        </ul>
+     
+    </div>
+</template>
+
+<script src="./users.ts"></script>

@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using VueAsp.Data.Interfaces;
 using VueAsp.Models;
+using VueAsp.ViewModels;
 
 namespace VueAsp.Controllers
 {
@@ -16,9 +18,19 @@ namespace VueAsp.Controllers
         }
         // GET: api/Brands
         [HttpGet]
-        public JsonResult Get()
+        public JsonResult Get([FromQuery] BrandParameters brandParameters)
         {
-            var brands = _repoWrapp.Brand.GetBrands();
+            var brands = _repoWrapp.Brand.GetBrands(brandParameters);
+            var metadata = new
+            {
+                brands.TotalCount,
+                brands.PageSize,
+                brands.CurrentPage,
+                brands.TotalPages,
+                brands.HasNext,
+                brands.HasPrevious
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Json(brands);
         }
         // GET: api/Brands/5
@@ -47,10 +59,12 @@ namespace VueAsp.Controllers
         }
         // PUT: api/Brands/5
         [HttpPut("{id}")]
-        public void Put(Guid id, [FromBody]Brand brand)
+        public JsonResult Put(Guid id, [FromBody]Brand brand, BrandParameters brandParameters)
         {
-            brand.BrandId = id;
             _repoWrapp.Brand.UpdateBrand(brand);
+            _repoWrapp.Save();
+            var brands = _repoWrapp.Brand.GetBrands(brandParameters);
+            return Json(brands);
         }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]

@@ -30,9 +30,12 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "@popperjs/core": "^2.4.4",
     "@types/core-js": "^2.5.3",
     "axios": "^0.19.2",
+    "vee-validate": "^3.3.9",
     "vue-mc": "^0.6.0",
+    "vue-meta": "^2.4.0",
     "vue-toasted": "^1.1.28",
     "vuex": "^3.5.1"
   }

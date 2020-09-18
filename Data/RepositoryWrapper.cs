@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using VueAsp.Data.Interfaces;
+﻿using VueAsp.Data.Interfaces;
 
 namespace VueAsp.Data
 {
@@ -12,6 +8,12 @@ namespace VueAsp.Data
         private IBrandRepository _brand;
         private IProductRepository _product;
         private ICategoryRepository _category;
+        private ISizeRepository _size;
+        private IPhotoRepository _photo;
+        private ISizePorductRepository _sizeProd;
+        private IOrderRepository _order;
+        private IAddressOrderRepository _addressOrder;
+        private ISubCategoryRepository _subCategory;
         public IBrandRepository Brand
         {
             get
@@ -48,6 +50,80 @@ namespace VueAsp.Data
                 }
 
                 return _category;
+            }
+        }
+        public ISizeRepository Size
+        {
+            get
+            {
+                if (_size == null)
+                {
+                    _size = new SizeRepository(_repoContext);
+                }
+
+                return _size;
+            }
+        }
+        public IPhotoRepository Photo
+        {
+            get
+            {
+                if (_photo == null)
+                {
+                    _photo = new PhotoRepository(_repoContext);
+                }
+
+                return _photo;
+            }
+        }
+        public ISizePorductRepository SizePorduct
+        {
+            get
+            {
+                if (_sizeProd == null)
+                {
+                    _sizeProd = new SizeProdRepository(_repoContext);
+                }
+
+                return _sizeProd;
+            }
+        }
+
+
+        public IOrderRepository Order
+        {
+            get
+            {
+                if (_order == null)
+                {
+                    _order = new OrderRepository(_repoContext);
+                }
+
+                return _order;
+            }
+        }
+        public IAddressOrderRepository AddressOrder
+        {
+            get
+            {
+                if (_addressOrder == null)
+                {
+                    _addressOrder = new AddressOrderRepository(_repoContext);
+                }
+
+                return _addressOrder;
+            }
+        }
+        public ISubCategoryRepository SubCategory
+        {
+            get
+            {
+                if (_subCategory == null)
+                {
+                    _subCategory = new SubCategoryRepository(_repoContext);
+                }
+
+                return _subCategory;
             }
         }
 

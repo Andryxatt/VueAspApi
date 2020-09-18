@@ -1,0 +1,17 @@
+<template>
+    <div>
+
+        <b-form-group label="Using options array:">
+            <b-form-checkbox-group id="checkbox-group-1"
+                                   v-model="userRoles"
+                                   :options="roles"
+                                 value-field="name"
+      text-field="name"
+                                   name="flavour-1"></b-form-checkbox-group>
+        </b-form-group>
+
+        <b-button @click="saveRoles">Зберегти ролі</b-button>
+    </div>
+</template>
+
+<script src="./user.ts"></script>

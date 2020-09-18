@@ -1,0 +1,23 @@
+<template>
+    <div>
+        Roles
+        <ul>
+            <li v-for="role in roles" :key="role.id">
+                <div>
+                    <span>{{role.name}}</span>      
+                        <form @submit.stop.prevent="DeleteRole(role.id)">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Delete
+                            </button>
+                        </form>
+                </div> 
+            </li>
+        </ul>
+        <label for="name">New role</label>
+        <input name="name" id="name" v-bind="name" v-model="name" class="form-control" />
+        <b-button @click="addRole()">Add new role</b-button>
+        <b-button to="/users-list">Users List</b-button>
+    </div>
+</template>
+
+<script src="./roles.ts"></script>

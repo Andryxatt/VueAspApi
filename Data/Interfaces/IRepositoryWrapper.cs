@@ -11,6 +11,12 @@ namespace VueAsp.Data.Interfaces
         IBrandRepository Brand { get; }
         IProductRepository Product { get; }
         ICategoryRepository Category { get; }
+        ISizeRepository Size { get; }
+        IPhotoRepository Photo { get; }
+        ISizePorductRepository SizePorduct { get; }
+        IOrderRepository Order { get; }
+        IAddressOrderRepository AddressOrder { get; }
+        ISubCategoryRepository SubCategory { get; }
         void Save();
     }
 }

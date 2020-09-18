@@ -27,14 +27,17 @@ namespace VueAsp
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<BazaDataBase>(options => options.UseSqlServer(connection));
             //Add Identity Authentication service
+            
             services.AddIdentity<User, IdentityRole>()
                         .AddEntityFrameworkStores<BazaDataBase>();
-
             services.AddMvc();
+               
             //Reposytory Wrapper service
             services.ConfigureRepositoryWrapper();
             services.AddDistributedMemoryCache();
             services.AddSession();
+ 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +50,7 @@ namespace VueAsp
                 {
                     HotModuleReplacement = true
                 });
+
             }
             else
             {

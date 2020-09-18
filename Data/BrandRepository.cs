@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VueAsp.Data.Interfaces;
 using VueAsp.Models;
+using VueAsp.ViewModels;
 
 namespace VueAsp.Data
 {
@@ -21,7 +22,7 @@ namespace VueAsp.Data
         public void DeleteBrand(Brand brand)
         {
             this.RepositoryContext.Brands.Remove(brand);
-            this.RepositoryContext.SaveChanges();
+           
         }
 
         public Brand GetBrandById(Guid brandId)
@@ -42,7 +43,6 @@ namespace VueAsp.Data
         public void UpdateBrand(Brand brand)
         {
             this.RepositoryContext.Brands.Update(brand);
-            this.RepositoryContext.SaveChanges();
         }
         private bool disposed = false;
 
@@ -62,6 +62,18 @@ namespace VueAsp.Data
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public PagedList<Brand> GetBrands(BrandParameters brandParameters)
+        {
+            return PagedList<Brand>.ToPagedList(FindAll().OrderBy(on => on.NameBrand),
+              brandParameters.PageNumber,
+              brandParameters.PageSize);
+        }
+
+        public Brand GetBrandById(Guid? brandId)
+        {
+         return  this.RepositoryContext.Brands.Where(b=>b.BrandId == brandId).FirstOrDefault();
         }
     }
 }

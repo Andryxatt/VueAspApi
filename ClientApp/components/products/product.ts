@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import { Component, Watch, Emit } from 'vue-property-decorator';
 import axios from 'axios';
-import { IProduct, Product } from '../products/product.model'
-import { IBrand } from '../brands/brand.model';
+import { IProduct, Product } from '../../data/models/product.model'
+import { IBrand } from '../../data/models/brand.model';
 import { Carousel, Slide } from 'vue-carousel';
 import PhotoComponent from '../photo/photo';
+import { BCard } from 'bootstrap-vue'
 import NewProductComponent from '../newproduct/newproduct';
 import EditProductComponent from '../editproduct/editproduct';
 
@@ -14,9 +15,11 @@ import EditProductComponent from '../editproduct/editproduct';
         Slide,
         PhotoComponent,
         NewProductComponent,
-        EditProductComponent
+        EditProductComponent,
+        BCard
     }
 })
+
 export default class ProductComponent extends Vue {
     rows= 100
     perPage = 8
@@ -32,6 +35,9 @@ export default class ProductComponent extends Vue {
     public formData = new FormData();
     mounted() {
         this.AllProducts();
+        axios.get('api/brands').then(responnse => {
+            this.brands = responnse.data;
+        })
     }
    
     showEdit(product: Product) {
@@ -61,9 +67,7 @@ export default class ProductComponent extends Vue {
             console.log("error");
         })
     }
-    searchP() {
 
-    }
     returnUrl(obj): string {
         var url = 'data:image/jpeg;base64,' + obj;
         return url;

@@ -3,26 +3,28 @@
 <html>
 <head>
     <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link rel="stylesheet" href="~/css/materialize.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main-shop.css" asp-append-version="true" />
-   
 </head>
 <body>
-    <nav class="light-blue lighten-3" role="navigation">
+    <nav class="indigo darken-3" role="navigation">
         <div class="nav-wrapper container">
-            <a id="logo-container" href="#"><img class="brand-logo" src="~/appImages/LogoMakr_5lIZFr.png" alt="ShopLogo" /></a>
-            <ul class="right hide-on-med-and-down">
+            <a id="logo-container" asp-controller="Home" asp-action="ShopHome">@*<img class="brand-logo" src="~/appImages/LogoMakr_5lIZFr.png" alt="ShopLogo" />*@ Shoes Baza <span>Outlet</span></a>
+            <ul id="top-nav" class="right hide-on-med-and-down">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li><a asp-controller="Home" asp-action="Index">Admin page</a></li>
+                    <li><a asp-controller="Cart" asp-action="Index"><i class="material-icons">shopping_cart</i></a></li>
+                    <li><span id="count"></span></li>
                     <li>
-                        <form method="post" asp-controller="Account" asp-action="Logout">
-                            <button type="submit">Log out</button>
+                        <form id="formOut" method="post" asp-controller="Account" asp-action="Logout">
+                            <a id="logOut" click="Submit" class="btn-small"><i class="material-icons right">exit_to_app</i>Log out</a>
                         </form>
                     </li>
                 }
@@ -32,17 +34,18 @@
                     <li><a asp-controller="Account" asp-action="Register">Регистрация</a></li>
                 }
             </ul>
-
             <ul id="nav-mobile" class="sidenav" style="transform: translateX(-105%);">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <li><a asp-controller="Home" asp-action="Index">Admin page</a></li>
-                    <li><a asp-controller="Account" asp-action="Logout">Log out</a></li>
+                <li><a asp-controller="Home" asp-action="Index">Admin page</a></li>
+                <li><a asp-controller="Account" asp-action="Logout">Вийти</a></li>
+                <li><a asp-controller="Cart" asp-action="Index"><i class="material-icons">shopping_cart</i></a></li>
+                <li><span id="count"></span></li>
                 }
                 else
                 {
-                    <li><a asp-controller="Account" asp-action="Login">Вход</a></li>
-                    <li><a asp-controller="Account" asp-action="Register">Регистрация</a></li>
+                <li><a asp-controller="Account" asp-action="Login">Вхід</a></li>
+                <li><a asp-controller="Account" asp-action="Register">Реєстрація</a></li>
                 }
             </ul>
             <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -62,9 +65,6 @@
         </div>
     </footer>
 
-
-
-
     <div class="sidenav-overlay" style="display: none; opacity: 0;"></div><div class="drag-target"></div>
     <!--JQuery-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -73,6 +73,39 @@
     <!--Initialization materialize -->
     <script src="~/js/initM.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)
+    <script>
+        $("#logOut").click(() => {
+            $("#formOut").submit();
+        });
+        if ($("#count").val()!=null) {
+            $(document).ready(function () {
+                getCount();
+            });
+        }
+      
+        function getCount() {
+            $.ajax({
+                type: "POST",
+                url: "cart/count",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+                        $("#count").text(response);
+                    } else {
+                        alert("Something went wrong");
+                    }
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+     
+    </script>
 </body>
 </html>
 

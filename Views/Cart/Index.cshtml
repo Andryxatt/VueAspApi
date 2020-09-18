@@ -1,0 +1,157 @@
+﻿@model VueAsp.ViewModels.Order.OrderViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutShop.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col s4">
+            <div class="order-information">
+                <form id="form" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed" asp-antiforgery="true">
+                    <div>
+                        <div>
+                            <label asp-for="FirstName"></label>
+                            <input type="text" asp-for="FirstName" />
+                        </div>
+                        <div>
+                            <label asp-for="LastName"></label>
+                            <input type="text" asp-for="LastName" />
+                        </div>
+                        <div>
+                            <label asp-for="User.Email"></label>
+                            <input type="email" asp-for="User.Email" />
+                        </div>
+                        <div>
+                            <label asp-for="User.PhoneNumber"></label>
+                            <input type="text" asp-for="User.PhoneNumber" />
+                        </div>
+                        <div>
+                            <label asp-for="Address.City"></label>
+                            <input type="text" asp-for="Address.City" />
+                        </div>
+                        <div>
+                            <label asp-for="Address.Streat"></label>
+                            <input type="text" asp-for="Address.Streat" />
+                        </div>
+                        <div>Сумма  <input id="total" value="@ViewBag.total" /> </div>
+                        <div>
+                            <input id="submit" type="submit" value="Придбати" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col s8">
+            @if (Model.Products.Count() > 0)
+            {
+                @for (int i = 0; i < Model.Products.Count; i++)
+                {
+                    <div class="item col-lg-12">
+                        <div class="image">
+                            <img src="@Model.Products[i].Product.Photos[0].Path" />
+                        </div>
+                        <div class="description">
+                            <p class="head">@Model.Products[i].Product.Brand.NameBrand - @Model.Products[i].Product.Brand.Description </p>
+                            <p class="price">Ціна за оиницю: <i>@Model.Products[i].Product.PriceBy"</i></p>
+                            <p class="size">Розмір @Model.Products[i].SelectedSize.Size.SizeEU</p>
+                        </div>
+                        <div class="count">
+                            <div class="quantity">
+                                <button class="btn-floating btn-small waves-effect waves-yellow blue lighten-2 add-btn" data-addProdId="@Model.Products[i].SelectedSize.ProductId" data-idSelectSize="@Model.Products[i].SelectedSize.Id" data-addSizeId="@Model.Products[i].SelectedSize.SizeId"><i class="material-icons">add</i></button>
+                                <input type="text" name="name" id="input_@Model.Products[i].SelectedSize.Id" value="@Model.Products[i].Quontity">
+                                <button class="btn-floating btn-small waves-effect waves-yellow blue lighten-2 remove-btn" data-addProdId="@Model.Products[i].SelectedSize.ProductId" data-idSelectSize="@Model.Products[i].SelectedSize.Id" data-addSizeId="@Model.Products[i].SelectedSize.SizeId"><i class="material-icons">remove</i></button>
+                            </div>
+                        </div>
+                        <div class="total-price">
+                            <input type="text" id="price_total_@Model.Products[i].SelectedSize.Id" value="@(Model.Products[i].Product.PriceBy * Model.Products[i].Quontity)" />
+                        </div>
+                        <a class="btn-floating btn-large waves-effect waves-light red" asp-controller="cart" asp-action="remove" asp-route-id="@Model.Products[i].Product.ProductId"><i class="material-icons">delete_sweep</i></a>
+                    </div>
+                }
+            }
+            else
+            {
+                <h2>Ваша корзина порожня</h2>
+                <a asp-controller="Home" asp-action="ShopHome">За покупками</a>
+            }
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        //key= AIzaSyAvkbfCXwWxr6NaskmjTGDK7vRGpPS_NuM
+        $(function () {
+            $('#submit').on('click', function (evt) {
+                evt.preventDefault();
+                $.post('/Order/AddOrder', $('#form').serialize(), function () {
+                    alert('Posted using jQuery');
+                });
+            });
+        });
+        $(".add-btn").click(function () {
+            var prodId = $(this).attr('data-addProdId');
+            var seledtId = $(this).attr('data-idSelectSize');
+            var sizeId = $(this).attr('data-addSizeId');
+            var count = $("#input_" + seledtId).val();
+            $.post('/Cart/Quontity', { prodId, sizeId, count, "operation": true, seledtId }).done(function (data) {
+                $("#input_" + seledtId).val(data.count);
+                $("#price_total_" + seledtId).val(data.price);
+                $("#total").val(data.total);
+            });;
+           
+        });
+        $(".remove-btn").click(function () {
+            var prodId = $(this).attr('data-addProdId');
+            var sizeId = $(this).attr('data-addSizeId');
+            var seledtId = $(this).attr('data-idSelectSize');
+            var count = $("#input_" + seledtId).val();
+            $.post('/Cart/Quontity', { prodId, sizeId, count, "operation": false, seledtId }).done(function (data) {
+                $("#input_" + seledtId).val(data.count);
+                $("#price_total_" + seledtId).val(data.price);
+                $("#total").val(data.total);
+            });;
+        });
+    </script>
+}
+
+<style scoped>
+
+    .image img {
+        width: 250px;
+    }
+
+    .item {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: center;
+        margin: 15px 0;
+        border-bottom: 1px solid #757575;
+        align-items: center;
+    }
+
+    .description {
+        width: 25%;
+    }
+
+    .count {
+        align-items: center;
+    }
+
+    .quantity {
+        text-align: center;
+    }
+
+        .quantity input {
+            border: none !important;
+            margin: 0 !important;
+            text-align: center;
+        }
+
+    .total-price {
+        font-size: 18px;
+        font-weight: 600;
+    }
+</style>

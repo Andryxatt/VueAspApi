@@ -1,83 +1,99 @@
 <template>
-    <div class="container">
-        <div class="row wrapp-content">
-            <router-link class="btn btn-primary" to="/newproduct">Create new product</router-link>
+
+    <div class="">
+        <div class="">
+            <router-link class="btn btn-primary" to="/newproduct">Додати товар</router-link>
             <EditProductComponent v-if="showEditKey" v-bind="product" :product="product" :brands="brands"></EditProductComponent>
-            <h2>List of products</h2>
-            <input type="search" @keyup="AllProducts" v-model="search" class="form-control" />
-            <button @click="AllProducts">Search</button>
-            <div class="container">
-                <b-card :title='product.model'
-                        :img-src="returnUrl(product.photos[0].byteImage)"
-                        img-alt="Image"
-                        img-width="100%"
-                        img-height="200px"
-                        img-top
-                        class="col-md-3"
-                        tag="article"
-                        v-for="product in products" :key="product.productId" v-bind="product">
-                    <b-card-text>
-                        <p>Price: {{product.priceBy}} $</p>
-                        Brand: {{product.brand.nameBrand}}
-                        <h5>Sizes:</h5>
+            <h2>Товари</h2>
+            <input type="search" @keyup="AllProducts" v-model="search" class="col-lg-3" />
+            <button @click="AllProducts">Пошук</button>
+        </div>
+        <b-card-group columns>
+            <b-card :title='product.model'
+                    :img-src="returnUrl(product.photos[0].byteImage)"
+                    img-alt="Image"
+                    img-width="100%"
+                    img-height="auto"
+                    img-top
+                    class="col-sm-6 col-md-4 col-lg-3"
+                    tag="article"
+                    v-for="product in products" :key="product.productId" v-bind="product">
+                <b-card-text>
+                    <p>Ціна закупки: {{product.priceBy}} $</p>
+                    Виробник: {{product.brand.nameBrand}}
+                    <div>
+                        <h5>Розміри:</h5>
                         <div v-if="product.sizes.length>0">
-                            <span v-for="size in product.sizes">
-                             {{size.size.sizeUA}} - ({{size.count}})
+                            <span v-for="size in product.sizes" :key="size.sizeId">
+                                {{size.size.sizeEU}} - ({{size.count}})
                             </span>
                         </div>
                         <div v-else>
                             <span>
-                             No sizes awelible
+                                Немає розмірів
                             </span>
                         </div>
-                    </b-card-text>
-                    <template v-slot:footer>
-                        <b-button pill variant="warning" @click.prevent="deleteProduct(product.productId)">Delete</b-button>
-                        <b-button pill variant="default" @click.prevent="showEdit(product)">Edit</b-button>
-                        <b-button pill variant="default" :to="{ name: 'single', params: { productId: product.productId }}">
-                            Add sizes
-                        </b-button>
-                    </template>
-                </b-card>
-            </div>
-            <div>
-                <b-button pill variant="info" :disabled="hasPrev == false" @click="prevPage">
-                    <i class="glyphicon glyphicon-arrow-left"></i> Previous
-                </b-button>
-                <b-button pill variant="info" :disabled="hasNext == false"  @click="nextPage">
-                    Next <i class="glyphicon glyphicon-arrow-right"></i>
-                </b-button>
-            </div>
+                    </div>
+                    <div>
+                        <div v-if="product.countBoxes>0">
+                            <p>Ящиків:{{product.countBoxes}}</p>
+                            <p>Пар в ящику:{{product.countPairsInBox}}</p>
+                            <p>Розміри в ящику:{{product.sizesInBox}}</p>
+                        </div>
+                        <div v-else>
+                            <span>
+                                Немає цілих ящиків
+                            </span>
+                        </div>
+                    </div>
+                </b-card-text>
+                <template v-slot:footer>
+                    <b-button pill variant="warning" @click.prevent="deleteProduct(product.productId)">Delete</b-button>
+                    <b-button pill variant="default" @click.prevent="showEdit(product)">Edit</b-button>
+                    <b-button pill variant="default" :to="{ name: 'single', params: { productId: product.productId }}">
+                        Add sizes
+                    </b-button>
+                </template>
+            </b-card>
+        </b-card-group>
+        <div class="col-lg-12">
+            <b-button pill variant="info" :disabled="hasPrev == false" @click="prevPage">
+                <i class="glyphicon glyphicon-arrow-left"></i> Previous
+            </b-button>
+            <b-button pill variant="info" :disabled="hasNext == false" @click="nextPage">
+                Next <i class="glyphicon glyphicon-arrow-right"></i>
+            </b-button>
         </div>
-</div>
+    </div>
+
 </template>
 <style scoped>
-   
-    form{
-        border:1px solid #a1a1a1;
-        background-color:#d1f8ff;
-        border-radius:5px;
-        padding:5px;
-        margin-bottom:15px;
+
+    form {
+        border: 1px solid #a1a1a1;
+        background-color: #d1f8ff;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 15px;
     }
+
     .wrapp-content {
-        margin-top: 60px;
+       margin-top: 60px;
     }
     .wrapp-content h2 {
-        text-align:center;
-        padding:15px;
-        text-transform:uppercase;
-       
+       text-align: center;
+       padding: 15px;
+       text-transform: uppercase;
     }
-    .card-footer{
-        display:flex;
-        justify-content:space-around;
+
+    .card-footer {
+        display: flex;
+        justify-content: space-around;
     }
+
     .card {
-        border:1px solid black;
-        border-radius:3px;
-        margin:0 0 10px ;
+        border: 1px solid black;
+        border-radius: 3px;
     }
-   
 </style>
 <script src="./product.ts"></script>

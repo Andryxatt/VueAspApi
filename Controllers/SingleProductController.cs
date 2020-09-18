@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using QRCoder;
 using VueAsp.Data;
+using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 using VueAsp.ViewModels;
 
@@ -20,9 +21,11 @@ namespace VueAsp.Controllers
     public class SingleProductController : Controller
     {
         private BazaDataBase db;
+        private IRepositoryWrapper _repoWrapp;
 
-        public SingleProductController(BazaDataBase _db)
+        public SingleProductController(BazaDataBase _db, IRepositoryWrapper wrapp)
         {
+            _repoWrapp = wrapp;
             db = _db;
         }
         // GET: api/SingleProduct
@@ -53,49 +56,50 @@ namespace VueAsp.Controllers
         }
         // POST: api/SingleProduct
         [HttpPost]
-        public string Post(Guid SizeId, Guid productId, int count)
+        public JsonResult Post([FromBody] List<ProdSizes> sizes)
         {
-            ProdSizes sizeProd = db.ProdSizes.Where(d => d.ProductId == productId && d.SizeId == SizeId).Include(d=>d.Size).FirstOrDefault();
             try
             {
-                if(sizeProd!=null)
+                if (sizes.Count() > 0)
                 {
-                    sizeProd.Count = count;
-                    db.ProdSizes.Update(sizeProd);
-                }
-                else
-                {
-                    ProdSizes prodSize = new ProdSizes
+                    foreach (var item in sizes)
                     {
-                        SizeId = SizeId,
-                        Size = db.Sizes.Where(s => s.SizeId == SizeId).FirstOrDefault(),
-                        Count = count,
-                        Id = Guid.NewGuid(),
-                        ProductId = productId
-                    };
-                    db.ProdSizes.Add(prodSize);
+                        var prodSize = _repoWrapp.SizePorduct.GetProductSizes(item.ProductId).Where(s => s.SizeId == item.SizeId).FirstOrDefault();
+                        if (prodSize != null)
+                        {
+                            prodSize.Count = item.Count;
+                            _repoWrapp.SizePorduct.UpdateProdSize(prodSize);
+                            _repoWrapp.Save();
+                        }
+                        else
+                        {
+                            item.Id = Guid.NewGuid();
+                            _repoWrapp.SizePorduct.Create(item);
+                            _repoWrapp.Save();
+                        }
+                    }
+                  
                 }
-               
-                db.SaveChanges();
-                
+                return new JsonResult(sizes)
+                {
+                    StatusCode = StatusCodes.Status201Created // Status code here 
+                };
             }
             catch (Exception)
             {
-
-                throw;
+                return new JsonResult(sizes)
+                {
+                    StatusCode = StatusCodes.Status400BadRequest // Status code here 
+                };
             }
-            return "Succes added";
-
-
-
         }
-        
+
         // PUT: api/SingleProduct/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)

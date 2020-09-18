@@ -21,7 +21,11 @@
             <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
         <b-list-group class="col-lg-5">
-            <b-list-group-item v-for="item in categories" href="#">{{item.nameCategory}}</b-list-group-item>
+            <b-list-group-item v-for="item in categories" :key="item.categoryId" href="#">
+                <input type="hidden" :value="item.categoryId" />
+                {{item.nameCategory}}
+                <router-link :to="{ path: '/subcategory/'+ item.categoryId}">Підкатегорії</router-link>
+            </b-list-group-item>
         </b-list-group>
     </div>
 </template>

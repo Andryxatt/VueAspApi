@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VueAsp.Data;
+using VueAsp.Data.Interfaces;
 using VueAsp.Models;
 
 namespace VueAsp.Controllers
@@ -13,16 +9,16 @@ namespace VueAsp.Controllers
     [Route("api/Sizes")]
     public class SizesController : Controller
     {
-        private BazaDataBase db;
-        public SizesController(BazaDataBase _db)
+        private IRepositoryWrapper _repoWrapp;
+        public SizesController(IRepositoryWrapper wrapper)
         {
-            db = _db;
+            _repoWrapp = wrapper;
         }
         // GET: api/Sizes
         [HttpGet]
         public JsonResult GetAllItems()
         {
-            var sizes = db.Sizes.ToList();
+            var sizes = _repoWrapp.Size.GetSizes();
             return Json(sizes);
         }
 
@@ -30,35 +26,46 @@ namespace VueAsp.Controllers
         [HttpGet("{id}", Name = "GetSize")]
         public JsonResult GetSingleItem(Guid sizeId)
         {
-            var size = db.Sizes.Where(p => p.SizeId == sizeId).FirstOrDefault();
+            var size = _repoWrapp.Size.GetSizeById(sizeId);
             return Json(size);
         }
         
         // POST: api/Sizes
         [HttpPost]
-        public void Post(string sizeUA, string sizeUSA)
+        public void Post(string sizeEU, string sizeUS, string cm, string sizeUK, Floor floor)
         {
             Size newSize = new Size
             {
                 SizeId = Guid.NewGuid(),
-                SizeUA = sizeUA,
-                SizeUSA = sizeUSA
-
+                SizeEU = sizeEU,
+                SizeUS = sizeUS,
+                CM = cm,
+                SizeUK = sizeUK,
+                Floor = floor
             };
-            db.Sizes.Add(newSize);
-            db.SaveChanges();
+            _repoWrapp.Size.Create(newSize);
+            _repoWrapp.Save();
         }
         
         // PUT: api/Sizes/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(Guid id, [FromBody]Size size)
         {
+            if (ModelState.IsValid)
+            {
+                _repoWrapp.Size.UpdateSize(size);
+                _repoWrapp.Save();
+            }
         }
         
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/ApiWithActions/guid<string>
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid Id)
         {
+            Size size = _repoWrapp.Size.GetSizeById(Id);
+            _repoWrapp.Size.DeleteSize(size);
+            _repoWrapp.Save();
+          
         }
     }
 }

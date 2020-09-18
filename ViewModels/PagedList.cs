@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VueAsp.Models;
 
 namespace VueAsp.ViewModels
 {
@@ -32,5 +33,10 @@ namespace VueAsp.ViewModels
 
 			return new PagedList<T>(items, count, pageNumber, pageSize);
 		}
-	}
+
+        internal static IEnumerable<Brand> ToPagedList(IQueryable<Brand> queryable)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

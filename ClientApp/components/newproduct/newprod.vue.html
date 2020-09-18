@@ -1,55 +1,146 @@
 <template>
-    <div row>
-        <form method="post" class="col-lg-12 mb-3">
-            <b-form-group>
-                <label for="model">Model product</label>
-                <b-form-input id="model"
-                              v-model="product.model"
-                              type="text"
-                              name="model"></b-form-input>
-            </b-form-group>
-            <b-form-group>
-                <label for="priceBy">Price by</label>
-                <b-form-input id="priceBy"
-                              v-model="product.priceBy"
-                              type="number"
-                              name="priceBy"></b-form-input>
-            </b-form-group>
-            <b-form-group>
-                <label for="">SubCategory </label>
-                <b-form-input id="subId"
-                              v-model="product.subId"
-                              name="subId" autocomplete="off"></b-form-input>
-            </b-form-group>
-            <b-form-group>
-                <label for="brand">Brand name </label>
-                <b-form-select id="brand" class="form-control" v-model="product.brandId" :options="brands" value-field="brandId" text-field="nameBrand">
-                </b-form-select>
-            </b-form-group>
-            <p>
-                <label for="files">Photos</label>
-                <b-container fluid class="p-4 bg-dark">
-                    <b-row>
-                        <b-col class="col-lg-3" v-for="(url,index) in files" :key="index">
-                            <b-img style="width:150px" thumbnail fluid :src="returnUrl(url)" alt="Image 1"></b-img>
-                            <b-button @click="slicePhoto(index)">Remove photo</b-button>
-                        </b-col>
+    <div>
+        <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
+            <form class="form-new-product" method="post" id="newProduct" @reset="resetForm" @submit.prevent="handleSubmit(checkForm)">
+                <validation-provider tag="div" class="iput_wrapper" rules="required" v-slot="{ errors }">
+                    <b-form-group label="Номер моделі:"
+                                  label-for="model">
+                        <b-form-input type="text"
+                                      v-model="product.model"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="Введіть номер моделі"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="secret|required|priceUSD" v-slot="{ errors }">
+                    <b-form-group label="Ціна закупки $ :"
+                                  label-for="priceBy">
+                        <b-form-input type="number"
+                                      v-model="product.priceBy"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="secret|required|priceUSD" v-slot="{ errors }">
+                    <b-form-group label="Ціна продажу $ :"
+                                  label-for="priceSalleUS">
+                        <b-form-input type="number"
+                                      v-model="product.priceSalleUS"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="secret|required|priceUAH" v-slot="{ errors }">
+                    <label for="priceSalleUAH">Ціна продажу &#8372 :</label>
+                    <b-form-group>
+                        <b-form-input type="number"
+                                      v-model="product.priceSalleUAH"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper">
+                    <label for="isDiscount">Зі знижкою?</label>
+                    <b-form-group>
+                        <b-form-checkbox @change="check($event)" id="isDiscount" v-model="product.isDiscount"></b-form-checkbox>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper">
+                    <b-form-group label="Знижка $ :"
+                                  label-for="discountUS">
+                        <b-form-input v-bind:disabled="isDiscount" type="number"
+                                      v-model="product.discountUS"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper">
+                    <label for="discountUAH">Знижка &#8372 :</label>
+                    <b-form-group>
+                        <b-form-input v-bind:disabled="isDiscount" type="number"
+                                      v-model="product.discountUAH"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="secret|required" v-slot="{ errors }">
+                    <b-form-group label="Кількисть ящиків:"
+                                  label-for="countBoxes">
+                        <b-form-input type="number"
+                                      v-model="product.countBoxes"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="input-1-live-feedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="required" v-slot="{ errors }">
+                    <b-form-group label="Кількисть пар в 1 ящ:"
+                                  label-for="countPairsInBox">
+                        <b-form-input type="number"
+                                      v-model="product.countPairsInBox"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="0"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="required" v-slot="{ errors }">
+                    <b-form-group label="Розміри пар:"
+                                  label-for="sizesInBox">
+                        <b-form-input type="text"
+                                      v-model="product.sizesInBox"
+                                      :state="errors[0] ? false : (valid ? true : null)"
+                                      placeholder="36-41"></b-form-input>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <validation-provider tag="div" class="iput_wrapper" rules="required" v-slot="{ errors }">
+                    <b-form-group label="Виробник:"
+                                  label-for="brand">
+                        <b-form-select id="exampleInputGroup3" class="form-control" v-model="product.brandId" :options="brands" value-field="brandId" text-field="nameBrand"></b-form-select>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>
+                <!--<validation-provider tag="div" class="iput_wrapper">
+                    <b-form-group label="Категорія:"
+                                  label-for="category">
+                        <b-form-select class="form-control" :options="categories" value-field="categoryId" text-field="categoryName"></b-form-select>
+                        <b-form-invalid-feedback id="inputLiveFeedback">{{ errors[0] }}</b-form-invalid-feedback>
+                    </b-form-group>
+                </validation-provider>-->
+                <div class="iput_wrapper">
+                    <label for="files">Фотографії</label>
+                    <b-container fluid class="p-4 bg-dark">
+                        <b-row>
+                            <b-col class="col-lg-3" v-for="(url,index) in files" :key="index">
+                                <b-img style="width:150px" thumbnail fluid :src="returnUrl(url)" alt="Image 1"></b-img>
+                                <b-button @click="slicePhoto(index)">Видалити фото</b-button>
+                            </b-col>
+                        </b-row>
+                    </b-container>
+                    <input type="file" name="files" id="files" ref="file" multiple v-on:change="handleFileUpload($event.target.files)" />
+                </div>
 
-                    </b-row>
-                </b-container>
-                <input type="file" name="files" id="files" ref="file" multiple v-on:change="handleFileUpload($event.target.files)" />
-            </p>
-            <b-button type="submit" pill variant="primary" @click.prevent="addProduct">Save</b-button>
-        </form>
-       
-        <!--<div class="col-lg-12" >
-            <b-img fluid alt="Fluid image" class="col-md-2" :src="returnUrl(url)" />
-            
-        </div>-->
+                <b-button class="col-lg-2" type="submit" pill variant="primary">Зберегти</b-button>
 
+
+            </form>
+        </ValidationObserver>
     </div>
 </template>
 <style scoped>
+    .form-new-product{
+        display:flex;
+        flex-wrap:wrap;
+    }
+    .iput_wrapper{
+        margin-right:15px;
+        width:auto;
+    }
 
 </style>
-<script src="./newproduct.ts"></script>
+<script src="./newproduct.ts" charset="utf-8"></script>

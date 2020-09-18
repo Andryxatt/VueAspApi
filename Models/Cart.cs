@@ -12,7 +12,7 @@ namespace VueAsp.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid CartId { get; set; }
-        public virtual List<CartProductSingle> CartProductsSingle { get; set; }
-        public virtual List<CartProductMass> CartProductsMass { get; set; }
+        public virtual List<CartProduct> CartProductsSingle { get; set; }
+   
     }
 }

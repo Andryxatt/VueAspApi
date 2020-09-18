@@ -13,30 +13,36 @@
             <div class="clearfix"></div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
                         <router-link to="/products" :exact="true">
                             <span class="glyphicon glyphicon-home"></span> Products
                         </router-link>
                     </li>
-                    <li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
                         <router-link to="/categories">
                             <span class="glyphicon glyphicon-th-list"></span> Categories
                         </router-link>
                     </li>
-                    <li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
                         <router-link to="/brands">
                             <span class="glyphicon glyphicon-th-list"></span> Brands
                         </router-link>
                     </li>
-                    <li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
                         <router-link to="/sizeproduct">
                             <span class="glyphicon glyphicon-th-list"></span> Sizes
+                        </router-link>
+                    </li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                        <router-link to="/roles-user">
+                            <span class="glyphicon glyphicon-th-list"></span> Roles User
                         </router-link>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+
 </template>
 
-<style src="./navmenu.css" />
+<style src="./navmenu.css" ></style>
