@@ -32,7 +32,7 @@
   "dependencies": {
     "@popperjs/core": "^2.4.4",
     "@types/core-js": "^2.5.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "vee-validate": "^3.3.9",
     "vue-mc": "^0.6.0",
     "vue-meta": "^2.4.0",
